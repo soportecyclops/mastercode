@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CodeInsertor — Prototipo Profesional Mejorado</title>
+    <title>CodeInsertor — Algoritmo Mejorado</title>
     <style>
+        /* Mantengo los mismos estilos pero mejoro el algoritmo */
         :root {
             --bg: #0f1724;
             --panel: #0b1220;
@@ -103,27 +104,6 @@
             color: var(--text);
         }
 
-        .file-info-display {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .file-path {
-            font-family: 'Consolas', monospace;
-            font-size: 0.75rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 200px;
-        }
-
         .pane-content {
             flex: 1;
             padding: 1.5rem;
@@ -131,39 +111,6 @@
             flex-direction: column;
             gap: 1rem;
             overflow-y: auto;
-        }
-
-        .floating-controls {
-            position: sticky;
-            top: 0;
-            background: var(--panel);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            margin: -1.5rem -1.5rem 1rem -1.5rem;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .analysis-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: rgba(87, 179, 255, 0.1);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--accent);
-        }
-
-        .match-percentage {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .analysis-stats {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
         }
 
         textarea {
@@ -219,28 +166,37 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .btn-success {
-            background: var(--success);
+        .floating-controls {
+            position: sticky;
+            top: 0;
+            background: var(--panel);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-success:hover {
-            background: #0da271;
+        .analysis-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(87, 179, 255, 0.1);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--accent);
         }
 
-        .btn-warning {
-            background: var(--warning);
+        .match-percentage {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
         }
 
-        .btn-warning:hover {
-            background: #e5940b;
-        }
-
-        .btn-danger {
-            background: var(--error);
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
+        .analysis-stats {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         .suggestion-list {
@@ -258,7 +214,6 @@
             padding: 1rem;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
         }
 
         .suggestion-item:hover {
@@ -271,11 +226,6 @@
             border-color: var(--accent);
         }
 
-        .suggestion-item.warning {
-            border-color: var(--warning);
-            background: rgba(245, 158, 11, 0.1);
-        }
-
         .suggestion-score {
             display: inline-block;
             background: var(--accent);
@@ -285,17 +235,6 @@
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
-        }
-
-        .suggestion-warning {
-            display: inline-block;
-            background: var(--warning);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
         }
 
         .suggestion-excerpt {
@@ -313,15 +252,6 @@
             flex-wrap: wrap;
         }
 
-        .sticky-actions {
-            position: sticky;
-            bottom: 0;
-            background: var(--panel);
-            padding: 1rem 0;
-            border-top: 1px solid var(--border);
-            margin-top: auto;
-        }
-
         footer {
             background: var(--panel);
             padding: 1.5rem 2rem;
@@ -335,29 +265,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-
-        .status-dot.idle {
-            background: var(--warning);
-        }
-
-        .status-dot.error {
-            background: var(--error);
         }
 
         .notification {
@@ -374,33 +281,10 @@
             box-shadow: var(--shadow);
             z-index: 1000;
             animation: slideIn 0.3s ease-out;
-            max-width: 400px;
         }
 
         .notification.success {
             border-left: 4px solid var(--success);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--error);
-        }
-
-        .notification.warning {
-            border-left: 4px solid var(--warning);
-        }
-
-        .notification .close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         @keyframes slideIn {
@@ -414,160 +298,12 @@
             }
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 2rem;
-        }
-
-        .modal {
-            background: var(--panel);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-content {
-            padding: 1.5rem;
-        }
-
-        .validation-warnings {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning);
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .validation-warning {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .validation-warning:last-child {
-            margin-bottom: 0;
-        }
-
-        .code-comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .code-block {
-            background: #0a0f1a;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .code-block-header {
-            padding: 0.75rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .code-block-content {
-            padding: 1rem;
-            font-family: 'Consolas', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .diff-added {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-
-        .diff-removed {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-
-        .export-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .filename-input {
-            background: #0a0f1a;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.75rem;
-            color: var(--text);
-            font-family: inherit;
-        }
-
-        .filename-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .history-section {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .history-entry {
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--radius);
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .history-time {
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .history-note {
-            color: var(--text-secondary);
-        }
-
-        .placeholder-text {
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 2rem;
-            font-style: italic;
-        }
-
-        .file-size-warning {
-            color: var(--warning);
+        .debug-info {
             font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
             margin-top: 0.5rem;
         }
     </style>
@@ -578,11 +314,7 @@
             <div class="header-content">
                 <div class="logo">
                     <h1>CodeInsertor</h1>
-                    <span class="version">v1.3</span>
-                </div>
-                <div class="status-indicator">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">Listo</span>
+                    <span class="version">v1.4 - Algoritmo Mejorado</span>
                 </div>
             </div>
         </header>
@@ -594,22 +326,11 @@
                     <h2>Código Original</h2>
                     <div class="action-buttons">
                         <button class="btn btn-secondary" onclick="clearOriginal()">Limpiar</button>
-                        <button class="btn btn-secondary" onclick="loadExample('original')">Ejemplo</button>
+                        <button class="btn btn-secondary" onclick="loadExample('original')">Ejemplo HTML</button>
                     </div>
                 </div>
                 <div class="pane-content">
-                    <textarea id="originalEl" placeholder="Pega tu código original aquí..." oninput="validateOriginalCode()"></textarea>
-                    <div class="file-info">
-                        <input type="file" id="fileInputOriginal" accept=".js,.py,.html,.css,.txt,.cs,.java,.php,.rb,.go,.rs,.ts" 
-                               onchange="handleFileUpload(event, 'original')" style="display: none;">
-                        <button class="btn btn-secondary" onclick="document.getElementById('fileInputOriginal').click()">
-                            Cargar Archivo
-                        </button>
-                    </div>
-                    <div class="file-info-display">
-                        <span>Archivo: <span id="originalFileName" class="file-path">ninguno</span></span>
-                        <span id="originalFileSize">-</span>
-                    </div>
+                    <textarea id="originalEl" placeholder="Pega tu código original aquí..."></textarea>
                 </div>
             </section>
 
@@ -619,22 +340,11 @@
                     <h2>Fragmento a Insertar</h2>
                     <div class="action-buttons">
                         <button class="btn btn-secondary" onclick="clearInsert()">Limpiar</button>
-                        <button class="btn btn-secondary" onclick="loadExample('insert')">Ejemplo</button>
+                        <button class="btn btn-secondary" onclick="loadExample('insert')">Ejemplo HTML</button>
                     </div>
                 </div>
                 <div class="pane-content">
-                    <textarea id="insertEl" placeholder="Pega el fragmento que quieres insertar..." oninput="validateInsertCode()"></textarea>
-                    <div class="file-info">
-                        <input type="file" id="fileInputInsert" accept=".js,.py,.html,.css,.txt,.cs,.java,.php,.rb,.go,.rs,.ts" 
-                               onchange="handleFileUpload(event, 'insert')" style="display: none;">
-                        <button class="btn btn-secondary" onclick="document.getElementById('fileInputInsert').click()">
-                            Cargar Archivo
-                        </button>
-                    </div>
-                    <div class="file-info-display">
-                        <span>Archivo: <span id="insertFileName" class="file-path">ninguno</span></span>
-                        <span id="insertFileSize">-</span>
-                    </div>
+                    <textarea id="insertEl" placeholder="Pega el fragmento que quieres insertar..."></textarea>
                     <button class="btn" id="analyzeBtn" onclick="runLocalAnalysis()">
                         Analizar Coincidencias
                     </button>
@@ -646,12 +356,10 @@
                 <div class="pane-header">
                     <h2>Análisis y Resultados</h2>
                     <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="runDiagnostics()">Pruebas</button>
-                        <button class="btn btn-warning" onclick="showAIAnalysis()">Análisis IA</button>
+                        <button class="btn btn-secondary" onclick="showDebugInfo()">Info Debug</button>
                     </div>
                 </div>
                 <div class="pane-content">
-                    <!-- Controles flotantes siempre visibles -->
                     <div class="floating-controls">
                         <div class="analysis-info">
                             <div class="match-percentage" id="matchPercentage">
@@ -668,24 +376,13 @@
                         </div>
                     </div>
 
-                    <!-- Contenido con scroll independiente -->
                     <div id="resultsContainer">
                         <p class="placeholder-text">Los resultados del análisis aparecerán aquí...</p>
                         <div class="suggestion-list" id="suggestionList" style="display: none;"></div>
                     </div>
 
-                    <!-- Historial siempre visible en el fondo -->
-                    <div class="history-section" id="historySection" style="display: none;">
-                        <h3>Historial Reciente</h3>
-                        <div id="historyList"></div>
-                    </div>
-
-                    <!-- Acciones sticky en la parte inferior -->
-                    <div class="sticky-actions" id="stickyActions" style="display: none;">
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary" onclick="clearAnalysis()">Limpiar Análisis</button>
-                            <button class="btn" onclick="exportAnalysis()">Exportar Resultados</button>
-                        </div>
+                    <div id="debugInfo" class="debug-info" style="display: none;">
+                        <!-- Información de debug aparecerá aquí -->
                     </div>
                 </div>
             </section>
@@ -694,10 +391,7 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-info">
-                    <p>CodeInsertor v1.3 - Análisis de código con validaciones inteligentes</p>
-                </div>
-                <div class="footer-actions">
-                    <button class="btn btn-secondary" onclick="showHelp()">Ayuda</button>
+                    <p>CodeInsertor v1.4 - Algoritmo de comparación mejorado</p>
                 </div>
             </div>
         </footer>
@@ -706,224 +400,27 @@
     <script>
         // Estado de la aplicación
         const state = {
-            language: 'auto',
             suggestions: [],
             chosen: null,
-            history: [],
-            undoStack: [],
-            redoStack: [],
-            maxHistory: 5,
             originalContent: '',
-            modifiedContent: '',
-            status: 'idle',
-            currentMatchPercentage: 0,
-            currentFiles: {
-                original: { name: 'ninguno', size: 0, path: '' },
-                insert: { name: 'ninguno', size: 0, path: '' }
-            }
+            debugInfo: ''
         };
 
         // Elementos DOM
         const originalEl = document.getElementById('originalEl');
         const insertEl = document.getElementById('insertEl');
-        const analyzeBtn = document.getElementById('analyzeBtn');
         const suggestionList = document.getElementById('suggestionList');
         const resultsContainer = document.getElementById('resultsContainer');
-        const historySection = document.getElementById('historySection');
-        const historyList = document.getElementById('historyList');
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
         const matchPercentage = document.getElementById('matchPercentage');
         const analysisStats = document.getElementById('analysisStats');
         const replaceBtn = document.getElementById('replaceBtn');
         const aboveBtn = document.getElementById('aboveBtn');
         const belowBtn = document.getElementById('belowBtn');
-        const stickyActions = document.getElementById('stickyActions');
-        const originalFileName = document.getElementById('originalFileName');
-        const originalFileSize = document.getElementById('originalFileSize');
-        const insertFileName = document.getElementById('insertFileName');
-        const insertFileSize = document.getElementById('insertFileSize');
+        const debugInfo = document.getElementById('debugInfo');
 
-        // Sistema de validación de código
-        class CodeValidator {
-            static validateSyntax(code, language = 'auto') {
-                const warnings = [];
-                
-                // Detectar lenguaje si es auto
-                if (language === 'auto') {
-                    language = this.detectLanguage(code);
-                }
-
-                // Validaciones básicas para todos los lenguajes
-                if (code.trim().length === 0) {
-                    warnings.push('El código está vacío');
-                    return warnings;
-                }
-
-                // Validaciones específicas por lenguaje
-                switch (language) {
-                    case 'javascript':
-                    case 'typescript':
-                        warnings.push(...this.validateJavaScript(code));
-                        break;
-                    case 'python':
-                        warnings.push(...this.validatePython(code));
-                        break;
-                    case 'java':
-                    case 'csharp':
-                        warnings.push(...this.validateBraceLanguages(code));
-                        break;
-                }
-
-                // Validaciones generales
-                warnings.push(...this.validateGeneral(code));
-
-                return warnings;
-            }
-
-            static detectLanguage(code) {
-                // Detección simple basada en patrones
-                if (code.includes('function') && (code.includes('{') || code.includes('=>'))) {
-                    return 'javascript';
-                } else if (code.includes('def ') && code.includes(':')) {
-                    return 'python';
-                } else if (code.includes('class ') && code.includes('{')) {
-                    return 'java';
-                }
-                return 'unknown';
-            }
-
-            static validateJavaScript(code) {
-                const warnings = [];
-                
-                // Verificar paréntesis balanceados
-                const parenStack = [];
-                const braceStack = [];
-                const bracketStack = [];
-                
-                for (let i = 0; i < code.length; i++) {
-                    const char = code[i];
-                    switch (char) {
-                        case '(': parenStack.push(i); break;
-                        case ')': 
-                            if (parenStack.length === 0) warnings.push('Paréntesis de cierre sin apertura');
-                            else parenStack.pop();
-                            break;
-                        case '{': braceStack.push(i); break;
-                        case '}': 
-                            if (braceStack.length === 0) warnings.push('Llave de cierre sin apertura');
-                            else braceStack.pop();
-                            break;
-                        case '[': bracketStack.push(i); break;
-                        case ']': 
-                            if (bracketStack.length === 0) warnings.push('Corchete de cierre sin apertura');
-                            else bracketStack.pop();
-                            break;
-                    }
-                }
-
-                // Verificar si hay paréntesis/llaves/corchetes sin cerrar
-                if (parenStack.length > 0) warnings.push('Paréntesis sin cerrar');
-                if (braceStack.length > 0) warnings.push('Llaves sin cerrar');
-                if (bracketStack.length > 0) warnings.push('Corchetes sin cerrar');
-
-                // Verificar punto y coma al final de líneas (para JS)
-                const lines = code.split('\n');
-                lines.forEach((line, index) => {
-                    const trimmed = line.trim();
-                    if (trimmed && !trimmed.endsWith(';') && !trimmed.endsWith('{') && 
-                        !trimmed.endsWith('}') && !trimmed.includes('//') && 
-                        !trimmed.startsWith('function') && !trimmed.startsWith('if') &&
-                        !trimmed.startsWith('for') && !trimmed.startsWith('while') &&
-                        !trimmed.includes('=>')) {
-                        warnings.push(`Línea ${index + 1}: posible punto y coma faltante`);
-                    }
-                });
-
-                return warnings;
-            }
-
-            static validatePython(code) {
-                const warnings = [];
-                // Validaciones básicas para Python
-                const lines = code.split('\n');
-                let indentLevel = 0;
-                
-                lines.forEach((line, index) => {
-                    const trimmed = line.trim();
-                    if (trimmed.endsWith(':') && !trimmed.startsWith('#')) {
-                        // Línea que debería tener indentación en la siguiente
-                        indentLevel++;
-                    }
-                });
-
-                return warnings;
-            }
-
-            static validateBraceLanguages(code) {
-                const warnings = [];
-                // Validaciones para lenguajes con llaves
-                const braceCount = (code.match(/{/g) || []).length;
-                const closeBraceCount = (code.match(/}/g) || []).length;
-                
-                if (braceCount !== closeBraceCount) {
-                    warnings.push(`Llaves desbalanceadas: ${braceCount} aperturas vs ${closeBraceCount} cierres`);
-                }
-
-                return warnings;
-            }
-
-            static validateGeneral(code) {
-                const warnings = [];
-                
-                // Verificar cambios muy grandes
-                const lineCount = code.split('\n').length;
-                if (lineCount > 1000) {
-                    warnings.push('Archivo muy grande (>1000 líneas). Considera dividirlo.');
-                }
-
-                // Verificar líneas muy largas
-                const lines = code.split('\n');
-                lines.forEach((line, index) => {
-                    if (line.length > 200) {
-                        warnings.push(`Línea ${index + 1} muy larga (${line.length} caracteres)`);
-                    }
-                });
-
-                return warnings;
-            }
-
-            static calculateChangeImpact(original, modified) {
-                const originalLines = original.split('\n');
-                const modifiedLines = modified.split('\n');
-                
-                const changes = {
-                    added: 0,
-                    removed: 0,
-                    modified: 0,
-                    totalChanges: 0
-                };
-
-                // Análisis simple de diferencias
-                changes.added = modifiedLines.length - originalLines.length;
-                changes.totalChanges = Math.abs(changes.added);
-
-                // Clasificar el impacto
-                if (changes.totalChanges === 0) {
-                    return { level: 'none', changes };
-                } else if (changes.totalChanges <= 5) {
-                    return { level: 'low', changes };
-                } else if (changes.totalChanges <= 20) {
-                    return { level: 'medium', changes };
-                } else {
-                    return { level: 'high', changes };
-                }
-            }
-        }
-
-        // Sistema de notificaciones mejorado
+        // Sistema de notificaciones
         class NotificationSystem {
-            static show(message, type = 'info', duration = 5000) {
+            static show(message, type = 'info') {
                 const notification = document.createElement('div');
                 notification.className = `notification ${type}`;
                 notification.innerHTML = `
@@ -937,10 +434,7 @@
                     if (notification.parentElement) {
                         notification.remove();
                     }
-                }, duration);
-
-                // Log en consola para debugging
-                console.log(`[${type.toUpperCase()}] ${message}`);
+                }, 5000);
             }
 
             static getIcon(type) {
@@ -952,166 +446,620 @@
                 };
                 return icons[type] || icons.info;
             }
-
-            static showValidationWarnings(warnings, context = '') {
-                if (warnings.length === 0) return;
-                
-                const warningText = warnings.slice(0, 3).join('\n• ');
-                const moreText = warnings.length > 3 ? `\n... y ${warnings.length - 3} más` : '';
-                
-                this.show(
-                    `Problemas detectados ${context}:\n• ${warningText}${moreText}`,
-                    'warning',
-                    8000
-                );
-            }
         }
 
-        // Sistema de historial robusto
-        class RobustHistoryManager {
-            static pushHistory(note = 'manual') {
-                const entry = {
-                    timestamp: new Date().toISOString(),
-                    note,
-                    content: originalEl.value,
-                    diffLines: this.computeDiff(state.originalContent, originalEl.value),
-                    files: { ...state.currentFiles }
-                };
-
-                if (state.history.length >= state.maxHistory) {
-                    state.history.shift();
-                }
-
-                state.history.push(entry);
-                this.persist();
-                this.updateDisplay();
-            }
-
-            static computeDiff(original, modified) {
-                const originalLines = original.split('\n');
-                const modifiedLines = modified.split('\n');
-                const diff = [];
-
-                for (let i = 0; i < Math.max(originalLines.length, modifiedLines.length); i++) {
-                    if (originalLines[i] !== modifiedLines[i]) {
-                        diff.push({
-                            line: i + 1,
-                            original: originalLines[i] || '',
-                            modified: modifiedLines[i] || ''
-                        });
-                    }
-                }
-
-                return diff;
-            }
-
-            static persist() {
-                try {
-                    if (!this.isLocalStorageAvailable()) {
-                        throw new Error('localStorage no disponible');
-                    }
-
-                    const storageItem = {
-                        data: state.history,
-                        timestamp: Date.now(),
-                        version: '1.3'
-                    };
-
-                    localStorage.setItem('codeinsertor_history', JSON.stringify(storageItem));
-                } catch (error) {
-                    this.useFallbackStorage();
-                }
-            }
-
-            static isLocalStorageAvailable() {
-                try {
-                    const test = 'test';
-                    localStorage.setItem(test, test);
-                    localStorage.removeItem(test);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            }
-
-            static useFallbackStorage() {
-                try {
-                    sessionStorage.setItem('codeinsertor_history_fallback', JSON.stringify(state.history));
-                } catch (error) {
-                    // En memoria ya está gestionado por el estado
-                }
-            }
-
-            static updateDisplay() {
-                if (state.history.length === 0) {
-                    historySection.style.display = 'none';
-                    return;
-                }
-
-                historySection.style.display = 'block';
-                historyList.innerHTML = state.history
-                    .slice(-3)
-                    .reverse()
-                    .map(entry => `
-                        <div class="history-entry">
-                            <div class="history-time">
-                                ${new Date(entry.timestamp).toLocaleTimeString()} 
-                                - ${entry.files.original.name}
-                            </div>
-                            <div class="history-note">${entry.note}</div>
-                        </div>
-                    `).join('');
-            }
-        }
-
-        // Analizador local mejorado con validaciones
-        class LocalAnalyzer {
+        // ALGORITMO MEJORADO DE COMPARACIÓN
+        class ImprovedAnalyzer {
             static analyzeLocal(originalText, insertText) {
                 if (!insertText.trim()) {
                     throw new Error('El fragmento a insertar está vacío');
                 }
 
-                // Validar el código original
-                const originalWarnings = CodeValidator.validateSyntax(originalText);
-                if (originalWarnings.length > 0) {
-                    NotificationSystem.showValidationWarnings(originalWarnings, 'en código original');
-                }
+                console.log("=== INICIANDO ANÁLISIS MEJORADO ===");
+                console.log("Longitud original:", originalText.length);
+                console.log("Longitud insert:", insertText.length);
 
-                // Validar el fragmento a insertar
-                const insertWarnings = CodeValidator.validateSyntax(insertText);
-                if (insertWarnings.length > 0) {
-                    NotificationSystem.showValidationWarnings(insertWarnings, 'en fragmento a insertar');
-                }
+                // Múltiples estrategias de comparación
+                const strategies = [
+                    this.analyzeByLines(originalText, insertText),
+                    this.analyzeByBlocks(originalText, insertText),
+                    this.analyzeByStructure(originalText, insertText),
+                    this.analyzeByKeywords(originalText, insertText)
+                ];
 
-                const tokensOriginal = this.tokenize(originalText);
-                const tokensInsert = this.tokenize(insertText);
+                // Combinar resultados de todas las estrategias
+                let allResults = [];
+                strategies.forEach((results, index) => {
+                    console.log(`Estrategia ${index + 1} encontró:`, results.length, "resultados");
+                    allResults = allResults.concat(results);
+                });
 
-                return this.slidingWindowAnalysis(tokensOriginal, tokensInsert, originalText);
-            }
-
-            static tokenize(text) {
-                return text.toLowerCase()
-                    .split(/[^a-z0-9_]+/)
-                    .filter(Boolean);
-            }
-
-            static slidingWindowAnalysis(tokensOriginal, tokensInsert, originalText) {
-                const results = [];
-                const insertSet = new Set(tokensInsert);
-                const windowSize = Math.max(tokensInsert.length, 10);
+                // Agrupar y ordenar resultados
+                const finalResults = this.mergeAndSortResults(allResults, originalText);
                 
-                for (let i = 0; i <= tokensOriginal.length - windowSize; i++) {
-                    const windowTokens = tokensOriginal.slice(i, i + windowSize);
-                    const windowSet = new Set(windowTokens);
+                console.log("=== RESULTADOS FINALES ===");
+                console.log("Total de coincidencias encontradas:", finalResults.length);
+                finalResults.forEach((result, idx) => {
+                    console.log(`Coincidencia ${idx + 1}: ${Math.round(result.score * 100)}% - Líneas ${result.startLine}-${result.endLine}`);
+                });
+
+                return finalResults.slice(0, 5); // Top 5 resultados
+            }
+
+            // Estrategia 1: Comparación por líneas
+            static analyzeByLines(originalText, insertText) {
+                const results = [];
+                const originalLines = originalText.split('\n');
+                const insertLines = insertText.split('\n').filter(line => line.trim().length > 0);
+                
+                if (insertLines.length === 0) return results;
+
+                // Buscar secuencias de líneas similares
+                for (let i = 0; i <= originalLines.length - insertLines.length; i++) {
+                    let matchCount = 0;
+                    let totalScore = 0;
+
+                    for (let j = 0; j < insertLines.length && (i + j) < originalLines.length; j++) {
+                        const similarity = this.calculateLineSimilarity(originalLines[i + j], insertLines[j]);
+                        if (similarity > 0.6) { // Umbral más bajo para líneas individuales
+                            matchCount++;
+                            totalScore += similarity;
+                        }
+                    }
+
+                    if (matchCount >= Math.max(1, insertLines.length * 0.3)) { // Al menos 30% de coincidencia
+                        const avgScore = totalScore / matchCount;
+                        results.push({
+                            startLine: i + 1,
+                            endLine: i + insertLines.length,
+                            score: avgScore * (matchCount / insertLines.length),
+                            excerpt: originalLines.slice(i, i + 5).join('\n'), // Primeras 5 líneas
+                            strategy: 'lines'
+                        });
+                    }
+                }
+
+                return results;
+            }
+
+            // Estrategia 2: Comparación por bloques estructurales
+            static analyzeByBlocks(originalText, insertText) {
+                const results = [];
+                
+                // Extraer bloques estructurales (funciones, clases, elementos HTML)
+                const originalBlocks = this.extractStructuralBlocks(originalText);
+                const insertBlocks = this.extractStructuralBlocks(insertText);
+
+                console.log("Bloques originales:", originalBlocks.length);
+                console.log("Bloques insert:", insertBlocks.length);
+
+                insertBlocks.forEach(insertBlock => {
+                    originalBlocks.forEach(originalBlock => {
+                        const similarity = this.calculateBlockSimilarity(originalBlock.content, insertBlock.content);
+                        if (similarity > 0.4) {
+                            results.push({
+                                startLine: originalBlock.startLine,
+                                endLine: originalBlock.endLine,
+                                score: similarity,
+                                excerpt: originalBlock.content.substring(0, 200) + '...',
+                                strategy: 'blocks'
+                            });
+                        }
+                    });
+                });
+
+                return results;
+            }
+
+            // Estrategia 3: Comparación por estructura general
+            static analyzeByStructure(originalText, insertText) {
+                const results = [];
+                
+                // Normalizar textos para comparación estructural
+                const normalizedOriginal = this.normalizeForStructuralComparison(originalText);
+                const normalizedInsert = this.normalizeForStructuralComparison(insertText);
+
+                // Buscar subcadenas largas comunes
+                const commonSubstrings = this.findLongCommonSubstrings(normalizedOriginal, normalizedInsert);
+                
+                commonSubstrings.forEach(substring => {
+                    if (substring.length > 20) { // Solo subcadenas significativas
+                        const positions = this.findAllOccurrences(originalText, substring);
+                        positions.forEach(pos => {
+                            const lines = this.getLineRange(originalText, pos, pos + substring.length);
+                            results.push({
+                                startLine: lines.start,
+                                endLine: lines.end,
+                                score: Math.min(1.0, substring.length / 100), // Score basado en longitud
+                                excerpt: substring.substring(0, 150) + '...',
+                                strategy: 'structure'
+                            });
+                        });
+                    }
+                });
+
+                return results;
+            }
+
+            // Estrategia 4: Comparación por palabras clave importantes
+            static analyzeByKeywords(originalText, insertText) {
+                const results = [];
+                
+                const originalKeywords = this.extractKeywords(originalText);
+                const insertKeywords = this.extractKeywords(insertText);
+                
+                const commonKeywords = originalKeywords.filter(kw => 
+                    insertKeywords.some(ikw => this.calculateSimilarity(kw, ikw) > 0.8)
+                );
+
+                if (commonKeywords.length > 0) {
+                    // Buscar áreas con alta densidad de palabras clave comunes
+                    const lines = originalText.split('\n');
+                    for (let i = 0; i < lines.length; i++) {
+                        let keywordCount = 0;
+                        commonKeywords.forEach(keyword => {
+                            if (lines[i].toLowerCase().includes(keyword.toLowerCase())) {
+                                keywordCount++;
+                            }
+                        });
+
+                        if (keywordCount >= 2) { // Al menos 2 palabras clave en la misma línea
+                            results.push({
+                                startLine: i + 1,
+                                endLine: i + 1,
+                                score: Math.min(0.7, keywordCount * 0.2),
+                                excerpt: lines[i],
+                                strategy: 'keywords'
+                            });
+                        }
+                    }
+                }
+
+                return results;
+            }
+
+            // Métodos auxiliares mejorados
+            static calculateLineSimilarity(line1, line2) {
+                if (!line1 || !line2) return 0;
+                
+                // Normalizar líneas
+                const norm1 = this.normalizeLine(line1);
+                const norm2 = this.normalizeLine(line2);
+                
+                if (norm1 === norm2) return 1.0;
+                
+                // Similitud por tokens
+                const tokens1 = new Set(norm1.split(/\s+/).filter(t => t.length > 2));
+                const tokens2 = new Set(norm2.split(/\s+/).filter(t => t.length > 2));
+                
+                const intersection = new Set([...tokens1].filter(x => tokens2.has(x)));
+                const union = new Set([...tokens1, ...tokens2]);
+                
+                return union.size > 0 ? intersection.size / union.size : 0;
+            }
+
+            static normalizeLine(line) {
+                return line
+                    .trim()
+                    .replace(/\s+/g, ' ')
+                    .replace(/[^\w\s<>\/="':-]/g, '') // Mantener caracteres importantes para código
+                    .toLowerCase();
+            }
+
+            static extractStructuralBlocks(text) {
+                const blocks = [];
+                const lines = text.split('\n');
+                let currentBlock = null;
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
                     
-                    const similarity = this.jaccardSimilarity(insertSet, windowSet);
-                    
-                    if (similarity > 0.3) {
-                        const startLine = this.findLineNumber(originalText, i);
-                        const endLine = this.findLineNumber(originalText, i + windowSize);
+                    // Detectar inicio de bloques
+                    if (line.match(/<(div|section|script|style|function|class)\b/) || 
+                        line.match(/(function|class)\s+\w/) ||
+                        line.includes('{') && !line.includes('}')) {
                         
-                        // Analizar el impacto del cambio
-                        const excerpt = this.getExcerpt(originalText, startLine, endLine);
+                        if (currentBlock) {
+                            blocks.push(currentBlock);
+                        }
+                        currentBlock = {
+                            startLine: i + 1,
+                            content: line + '\n',
+                            type: this.detectBlockType(line)
+                        };
+                    } 
+                    // Continuar bloque actual
+                    else if (currentBlock) {
+                        currentBlock.content += line + '\n';
+                        
+                        // Detectar fin de bloque
+                        if (line.includes('</') || line.includes('}') || 
+                            (line === '' && i > currentBlock.startLine + 10)) {
+                            currentBlock.endLine = i + 1;
+                            blocks.push(currentBlock);
+                            currentBlock = null;
+                        }
+                    }
+                }
+
+                if (currentBlock) {
+                    currentBlock.endLine = lines.length;
+                    blocks.push(currentBlock);
+                }
+
+                return blocks;
+            }
+
+            static detectBlockType(line) {
+                if (line.includes('<div')) return 'html';
+                if (line.includes('<script')) return 'script';
+                if (line.includes('<style')) return 'style';
+                if (line.includes('function')) return 'function';
+                if (line.includes('class')) return 'class';
+                return 'unknown';
+            }
+
+            static calculateBlockSimilarity(block1, block2) {
+                const lines1 = block1.split('\n').filter(l => l.trim());
+                const lines2 = block2.split('\n').filter(l => l.trim());
+                
+                if (lines1.length === 0 || lines2.length === 0) return 0;
+                
+                let totalSimilarity = 0;
+                let comparisons = 0;
+                
+                // Comparar líneas correspondientes
+                const minLines = Math.min(lines1.length, lines2.length);
+                for (let i = 0; i < minLines; i++) {
+                    totalSimilarity += this.calculateLineSimilarity(lines1[i], lines2[i]);
+                    comparisons++;
+                }
+                
+                return comparisons > 0 ? totalSimilarity / comparisons : 0;
+            }
+
+            static normalizeForStructuralComparison(text) {
+                return text
+                    .toLowerCase()
+                    .replace(/\s+/g, ' ')
+                    .replace(/<!--.*?-->/g, '') // Remover comentarios
+                    .replace(/\/\*.*?\*\//g, '')
+                    .replace(/\/\/.*$/gm, '')
+                    .trim();
+            }
+
+            static findLongCommonSubstrings(str1, str2) {
+                const substrings = [];
+                const maxLength = 100; // Longitud máxima para evitar sobrecarga
+                
+                for (let len = maxLength; len >= 10; len--) {
+                    for (let i = 0; i <= str1.length - len; i++) {
+                        const substring = str1.substring(i, i + len);
+                        if (str2.includes(substring)) {
+                            substrings.push(substring);
+                            // Saltar adelante para evitar solapamientos
+                            i += len - 1;
+                        }
+                    }
+                    if (substrings.length > 0) break; // Encontrar las más largas primero
+                }
+                
+                return substrings;
+            }
+
+            static findAllOccurrences(text, substring) {
+                const positions = [];
+                let pos = text.indexOf(substring);
+                while (pos !== -1) {
+                    positions.push(pos);
+                    pos = text.indexOf(substring, pos + 1);
+                }
+                return positions;
+            }
+
+            static getLineRange(text, startPos, endPos) {
+                const lines = text.split('\n');
+                let currentPos = 0;
+                let startLine = 1;
+                let endLine = 1;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const lineLength = lines[i].length + 1; // +1 por el \n
+                    if (currentPos <= startPos && startPos < currentPos + lineLength) {
+                        startLine = i + 1;
+                    }
+                    if (currentPos <= endPos && endPos < currentPos + lineLength) {
+                        endLine = i + 1;
+                        break;
+                    }
+                    currentPos += lineLength;
+                }
+                
+                return { start: startLine, end: endLine };
+            }
+
+            static extractKeywords(text) {
+                // Palabras clave comunes en código
+                const commonKeywords = ['function', 'class', 'var', 'let', 'const', 'return', 'if', 'else', 'for', 'while'];
+                const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+                
+                return words.filter(word => 
+                    word.length > 3 && 
+                    !commonKeywords.includes(word) &&
+                    !word.match(/^\d+$/)
+                ).slice(0, 20); // Limitar a 20 palabras clave
+            }
+
+            static calculateSimilarity(str1, str2) {
+                const set1 = new Set(str1.toLowerCase());
+                const set2 = new Set(str2.toLowerCase());
+                const intersection = new Set([...set1].filter(x => set2.has(x)));
+                const union = new Set([...set1, ...set2]);
+                return union.size > 0 ? intersection.size / union.size : 0;
+            }
+
+            static mergeAndSortResults(results, originalText) {
+                // Agrupar resultados similares
+                const merged = [];
+                const usedPositions = new Set();
+                
+                results.forEach(result => {
+                    const key = `${result.startLine}-${result.endLine}`;
+                    if (!usedPositions.has(key)) {
+                        usedPositions.add(key);
+                        
+                        // Mejorar el score basado en la estrategia
+                        let enhancedScore = result.score;
+                        if (result.strategy === 'structure') enhancedScore *= 1.2;
+                        if (result.strategy === 'blocks') enhancedScore *= 1.1;
+                        
+                        merged.push({
+                            ...result,
+                            score: Math.min(1.0, enhancedScore)
+                        });
+                    }
+                });
+                
+                // Ordenar por score descendente
+                return merged.sort((a, b) => b.score - a.score);
+            }
+        }
+
+        // Funciones principales
+        function runLocalAnalysis() {
+            try {
+                const originalText = originalEl.value;
+                const insertText = insertEl.value;
+
+                if (!originalText.trim() || !insertText.trim()) {
+                    throw new Error('Ambas ventanas deben contener código');
+                }
+
+                console.clear();
+                console.log("=== EJECUTANDO ANÁLISIS MEJORADO ===");
+                
+                const results = ImprovedAnalyzer.analyzeLocal(originalText, insertText);
+                state.suggestions = results;
+                state.originalContent = originalText;
+
+                displayResults(results);
+                updateAnalysisInfo(results);
+
+                NotificationSystem.show(`Encontradas ${results.length} coincidencias`, 'success');
+
+            } catch (error) {
+                NotificationSystem.show(`Error: ${error.message}`, 'error');
+                console.error('Error en análisis:', error);
+            }
+        }
+
+        function displayResults(results) {
+            const placeholder = resultsContainer.querySelector('.placeholder-text');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            if (results.length === 0) {
+                suggestionList.innerHTML = '<p class="placeholder-text">No se encontraron coincidencias significativas</p>';
+                suggestionList.style.display = 'block';
+                return;
+            }
+
+            suggestionList.innerHTML = results.map((result, index) => `
+                <div class="suggestion-item ${index === 0 ? 'selected' : ''}" 
+                     onclick="selectSuggestion(${index})">
+                    <span class="suggestion-score">${Math.round(result.score * 100)}% coincidencia</span>
+                    <small style="color: var(--text-secondary);">Estrategia: ${result.strategy}</small>
+                    <div class="suggestion-excerpt">Líneas ${result.startLine}-${result.endLine}:\n${result.excerpt}</div>
+                </div>
+            `).join('');
+
+            suggestionList.style.display = 'block';
+            state.chosen = results[0];
+            
+            // Habilitar botones de acción
+            replaceBtn.disabled = false;
+            aboveBtn.disabled = false;
+            belowBtn.disabled = false;
+        }
+
+        function updateAnalysisInfo(results) {
+            if (results.length === 0) {
+                matchPercentage.textContent = 'Coincidencia: 0%';
+                analysisStats.textContent = 'Sin coincidencias';
+                return;
+            }
+
+            const bestMatch = results[0];
+            const percentage = Math.round(bestMatch.score * 100);
+            
+            matchPercentage.textContent = `Coincidencia: ${percentage}%`;
+            analysisStats.textContent = `${results.length} sugerencias · Líneas ${bestMatch.startLine}-${bestMatch.endLine}`;
+        }
+
+        function selectSuggestion(index) {
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            document.querySelectorAll('.suggestion-item')[index].classList.add('selected');
+            state.chosen = state.suggestions[index];
+        }
+
+        function applyEdit(mode) {
+            if (!state.chosen) {
+                NotificationSystem.show('Selecciona una sugerencia primero', 'warning');
+                return;
+            }
+
+            const modifiedCode = applyCodeChanges(mode);
+            NotificationSystem.show('Cambios aplicados. Revisa el resultado.', 'success');
+            originalEl.value = modifiedCode;
+        }
+
+        function applyCodeChanges(mode) {
+            const lines = originalEl.value.split('\n');
+            const insertContent = insertEl.value;
+            const startIndex = state.chosen.startLine - 1;
+            
+            let modifiedLines;
+
+            switch (mode) {
+                case 'replace':
+                    modifiedLines = [
+                        ...lines.slice(0, startIndex),
+                        insertContent,
+                        ...lines.slice(state.chosen.endLine)
+                    ];
+                    break;
+                case 'above':
+                    modifiedLines = [
+                        ...lines.slice(0, startIndex),
+                        insertContent,
+                        ...lines.slice(startIndex)
+                    ];
+                    break;
+                case 'below':
+                    modifiedLines = [
+                        ...lines.slice(0, state.chosen.endLine),
+                        insertContent,
+                        ...lines.slice(state.chosen.endLine)
+                    ];
+                    break;
+                default:
+                    modifiedLines = lines;
+            }
+
+            return modifiedLines.join('\n');
+        }
+
+        function showDebugInfo() {
+            const info = `
+                === INFORMACIÓN DE DEBUG ===
+                Longitud original: ${originalEl.value.length}
+                Longitud insert: ${insertEl.value.length}
+                Coincidencias encontradas: ${state.suggestions.length}
+                Última estrategia: ${state.chosen?.strategy || 'N/A'}
+                
+                Primeras 200 chars original:
+                ${originalEl.value.substring(0, 200)}
+                
+                Primeras 200 chars insert:
+                ${insertEl.value.substring(0, 200)}
+            `;
+            
+            debugInfo.textContent = info;
+            debugInfo.style.display = 'block';
+        }
+
+        // Funciones de utilidad
+        function clearOriginal() {
+            originalEl.value = '';
+            NotificationSystem.show('Ventana original limpiada', 'info');
+        }
+
+        function clearInsert() {
+            insertEl.value = '';
+            NotificationSystem.show('Ventana de inserción limpiada', 'info');
+        }
+
+        function loadExample(type) {
+            const examples = {
+                original: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo Original</title>
+    <style>
+        body { margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mi Aplicación</h1>
+        <p>Este es un ejemplo de código HTML.</p>
+    </div>
+    <script>
+        function init() {
+            console.log("Aplicación iniciada");
+        }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>`,
+
+                insert: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo Mejorado</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mi Aplicación Mejorada</h1>
+        <p>Este es el código HTML mejorado con nuevos estilos.</p>
+    </div>
+    <script>
+        function enhancedInit() {
+            console.log("Aplicación mejorada iniciada");
+            // Nuevas funcionalidades aquí
+        }
+        document.addEventListener('DOMContentLoaded', enhancedInit);
+    </script>
+</body>
+</html>`
+            };
+
+            if (type === 'original') {
+                originalEl.value = examples.original;
+            } else {
+                insertEl.value = examples.insert;
+            }
+
+            NotificationSystem.show('Ejemplo cargado - Ahora prueba el análisis!', 'success');
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            NotificationSystem.show('CodeInsertor v1.4 - Algoritmo mejorado cargado!', 'success');
+        });
+    </script>
+</body>
+</html>
                         const changeImpact = this.analyzeChangeImpact(excerpt, tokensInsert.join(' '));
                         
                         results.push({
