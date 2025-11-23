@@ -3,9 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CodeInsertor — Algoritmo Mejorado</title>
+    <title>CodeInsertor — Versión Corregida</title>
     <style>
-        /* Mantengo los mismos estilos pero mejoro el algoritmo */
         :root {
             --bg: #0f1724;
             --panel: #0b1220;
@@ -104,6 +103,27 @@
             color: var(--text);
         }
 
+        .file-info-display {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-path {
+            font-family: 'Consolas', monospace;
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+        }
+
         .pane-content {
             flex: 1;
             padding: 1.5rem;
@@ -111,6 +131,39 @@
             flex-direction: column;
             gap: 1rem;
             overflow-y: auto;
+        }
+
+        .floating-controls {
+            position: sticky;
+            top: 0;
+            background: var(--panel);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(87, 179, 255, 0.1);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--accent);
+        }
+
+        .match-percentage {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .analysis-stats {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         textarea {
@@ -166,37 +219,28 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .floating-controls {
-            position: sticky;
-            top: 0;
-            background: var(--panel);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            margin: -1.5rem -1.5rem 1rem -1.5rem;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .btn-success {
+            background: var(--success);
         }
 
-        .analysis-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: rgba(87, 179, 255, 0.1);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--accent);
+        .btn-success:hover {
+            background: #0da271;
         }
 
-        .match-percentage {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--accent);
+        .btn-warning {
+            background: var(--warning);
         }
 
-        .analysis-stats {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        .btn-warning:hover {
+            background: #e5940b;
+        }
+
+        .btn-danger {
+            background: var(--error);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
         }
 
         .suggestion-list {
@@ -214,6 +258,7 @@
             padding: 1rem;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
 
         .suggestion-item:hover {
@@ -226,6 +271,11 @@
             border-color: var(--accent);
         }
 
+        .suggestion-item.warning {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
         .suggestion-score {
             display: inline-block;
             background: var(--accent);
@@ -235,6 +285,17 @@
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+        }
+
+        .suggestion-warning {
+            display: inline-block;
+            background: var(--warning);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
         }
 
         .suggestion-excerpt {
@@ -252,6 +313,15 @@
             flex-wrap: wrap;
         }
 
+        .sticky-actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--panel);
+            padding: 1rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+
         footer {
             background: var(--panel);
             padding: 1.5rem 2rem;
@@ -265,6 +335,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-dot.idle {
+            background: var(--warning);
+        }
+
+        .status-dot.error {
+            background: var(--error);
         }
 
         .notification {
@@ -281,10 +374,33 @@
             box-shadow: var(--shadow);
             z-index: 1000;
             animation: slideIn 0.3s ease-out;
+            max-width: 400px;
         }
 
         .notification.success {
             border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .notification .close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @keyframes slideIn {
@@ -298,12 +414,160 @@
             }
         }
 
-        .debug-info {
-            font-size: 0.8rem;
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+
+        .modal {
+            background: var(--panel);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+        }
+
+        .validation-warnings {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .validation-warning {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .validation-warning:last-child {
+            margin-bottom: 0;
+        }
+
+        .code-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .code-block {
+            background: #0a0f1a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .code-block-header {
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .code-block-content {
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .diff-added {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .diff-removed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .filename-input {
+            background: #0a0f1a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .filename-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .history-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .history-entry {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .history-time {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .history-note {
             color: var(--text-secondary);
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+        }
+
+        .placeholder-text {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .file-size-warning {
+            color: var(--warning);
+            font-size: 0.8rem;
             margin-top: 0.5rem;
         }
     </style>
@@ -314,7 +578,11 @@
             <div class="header-content">
                 <div class="logo">
                     <h1>CodeInsertor</h1>
-                    <span class="version">v1.4 - Algoritmo Mejorado</span>
+                    <span class="version">v1.5 - Corregido</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Listo</span>
                 </div>
             </div>
         </header>
@@ -326,11 +594,22 @@
                     <h2>Código Original</h2>
                     <div class="action-buttons">
                         <button class="btn btn-secondary" onclick="clearOriginal()">Limpiar</button>
-                        <button class="btn btn-secondary" onclick="loadExample('original')">Ejemplo HTML</button>
+                        <button class="btn btn-secondary" onclick="loadExample('original')">Ejemplo</button>
                     </div>
                 </div>
                 <div class="pane-content">
                     <textarea id="originalEl" placeholder="Pega tu código original aquí..."></textarea>
+                    <div class="file-info">
+                        <input type="file" id="fileInputOriginal" accept=".js,.py,.html,.css,.txt,.cs,.java,.php,.rb,.go,.rs,.ts" 
+                               onchange="handleFileUpload(event, 'original')" style="display: none;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('fileInputOriginal').click()">
+                            Cargar Archivo
+                        </button>
+                    </div>
+                    <div class="file-info-display">
+                        <span>Archivo: <span id="originalFileName" class="file-path">ninguno</span></span>
+                        <span id="originalFileSize">-</span>
+                    </div>
                 </div>
             </section>
 
@@ -340,11 +619,22 @@
                     <h2>Fragmento a Insertar</h2>
                     <div class="action-buttons">
                         <button class="btn btn-secondary" onclick="clearInsert()">Limpiar</button>
-                        <button class="btn btn-secondary" onclick="loadExample('insert')">Ejemplo HTML</button>
+                        <button class="btn btn-secondary" onclick="loadExample('insert')">Ejemplo</button>
                     </div>
                 </div>
                 <div class="pane-content">
                     <textarea id="insertEl" placeholder="Pega el fragmento que quieres insertar..."></textarea>
+                    <div class="file-info">
+                        <input type="file" id="fileInputInsert" accept=".js,.py,.html,.css,.txt,.cs,.java,.php,.rb,.go,.rs,.ts" 
+                               onchange="handleFileUpload(event, 'insert')" style="display: none;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('fileInputInsert').click()">
+                            Cargar Archivo
+                        </button>
+                    </div>
+                    <div class="file-info-display">
+                        <span>Archivo: <span id="insertFileName" class="file-path">ninguno</span></span>
+                        <span id="insertFileSize">-</span>
+                    </div>
                     <button class="btn" id="analyzeBtn" onclick="runLocalAnalysis()">
                         Analizar Coincidencias
                     </button>
@@ -356,10 +646,12 @@
                 <div class="pane-header">
                     <h2>Análisis y Resultados</h2>
                     <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="showDebugInfo()">Info Debug</button>
+                        <button class="btn btn-secondary" onclick="runDiagnostics()">Pruebas</button>
+                        <button class="btn btn-warning" onclick="showAIAnalysis()">Análisis IA</button>
                     </div>
                 </div>
                 <div class="pane-content">
+                    <!-- Controles flotantes siempre visibles -->
                     <div class="floating-controls">
                         <div class="analysis-info">
                             <div class="match-percentage" id="matchPercentage">
@@ -376,13 +668,24 @@
                         </div>
                     </div>
 
+                    <!-- Contenido con scroll independiente -->
                     <div id="resultsContainer">
                         <p class="placeholder-text">Los resultados del análisis aparecerán aquí...</p>
                         <div class="suggestion-list" id="suggestionList" style="display: none;"></div>
                     </div>
 
-                    <div id="debugInfo" class="debug-info" style="display: none;">
-                        <!-- Información de debug aparecerá aquí -->
+                    <!-- Historial siempre visible en el fondo -->
+                    <div class="history-section" id="historySection" style="display: none;">
+                        <h3>Historial Reciente</h3>
+                        <div id="historyList"></div>
+                    </div>
+
+                    <!-- Acciones sticky en la parte inferior -->
+                    <div class="sticky-actions" id="stickyActions" style="display: none;">
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="clearAnalysis()">Limpiar Análisis</button>
+                            <button class="btn" onclick="exportAnalysis()">Exportar Resultados</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -391,19 +694,26 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-info">
-                    <p>CodeInsertor v1.4 - Algoritmo de comparación mejorado</p>
+                    <p>CodeInsertor v1.5 - Problemas críticos corregidos</p>
+                </div>
+                <div class="footer-actions">
+                    <button class="btn btn-secondary" onclick="showHelp()">Ayuda</button>
                 </div>
             </div>
         </footer>
     </div>
 
     <script>
-        // Estado de la aplicación
+        // Estado de la aplicación - SIMPLIFICADO Y CORREGIDO
         const state = {
             suggestions: [],
             chosen: null,
             originalContent: '',
-            debugInfo: ''
+            modifiedContent: '',
+            currentFiles: {
+                original: { name: 'codigo.html', size: 0, path: '' },
+                insert: { name: 'fragmento.html', size: 0, path: '' }
+            }
         };
 
         // Elementos DOM
@@ -416,9 +726,236 @@
         const replaceBtn = document.getElementById('replaceBtn');
         const aboveBtn = document.getElementById('aboveBtn');
         const belowBtn = document.getElementById('belowBtn');
-        const debugInfo = document.getElementById('debugInfo');
 
-        // Sistema de notificaciones
+        // ========== SISTEMA DE NOMBRES DE ARCHIVO MEJORADO ==========
+        class FileNameManager {
+            static generateSmartFilename(originalName = 'codigo') {
+                // Si no hay nombre original, usar nombres por defecto basados en el tipo de contenido
+                if (originalName === 'ninguno' || originalName === 'codigo') {
+                    const content = originalEl.value;
+                    if (content.includes('<!DOCTYPE html>') || content.includes('<html')) {
+                        return 'documento-modificado.html';
+                    } else if (content.includes('function') || content.includes('const ') || content.includes('let ')) {
+                        return 'script-modificado.js';
+                    } else if (content.includes('import ') || content.includes('from ')) {
+                        return 'modulo-modificado.js';
+                    } else {
+                        return 'archivo-modificado.txt';
+                    }
+                }
+                
+                // Si hay nombre original, procesarlo correctamente
+                const baseName = originalName.replace(/\.[^/.]+$/, "");
+                const extension = originalName.includes('.') ? '.' + originalName.split('.').pop() : '.txt';
+                
+                return `${baseName}-modificado${extension}`;
+            }
+
+            static detectFileType(content) {
+                if (content.includes('<!DOCTYPE html>') || content.includes('<html')) return 'html';
+                if (content.includes('function') || content.includes('const ') || content.includes('let ')) return 'javascript';
+                if (content.includes('import ') || content.includes('from ')) return 'typescript';
+                if (content.includes('def ') || content.includes('import ')) return 'python';
+                return 'text';
+            }
+        }
+
+        // ========== ALGORITMO DE COMPARACIÓN CORREGIDO ==========
+        class FixedAnalyzer {
+            static analyzeLocal(originalText, insertText) {
+                console.log("🔍 Iniciando análisis corregido...");
+                
+                if (!insertText.trim()) {
+                    throw new Error('El fragmento a insertar está vacío');
+                }
+
+                const results = [];
+                const originalLines = originalText.split('\n');
+                const insertLines = insertText.split('\n').filter(line => line.trim().length > 0);
+
+                // Estrategia 1: Buscar líneas idénticas o muy similares
+                for (let i = 0; i < originalLines.length; i++) {
+                    for (let j = 0; j < insertLines.length; j++) {
+                        const similarity = this.calculateSimilarity(originalLines[i], insertLines[j]);
+                        if (similarity > 0.7) { // Umbral más realista
+                            // Encontrar el contexto alrededor de esta línea
+                            const startLine = Math.max(0, i - 2);
+                            const endLine = Math.min(originalLines.length - 1, i + 2);
+                            
+                            const excerpt = originalLines.slice(startLine, endLine + 1).join('\n');
+                            const contextSimilarity = this.analyzeContext(originalLines, insertLines, i, j);
+                            
+                            results.push({
+                                startLine: startLine + 1,
+                                endLine: endLine + 1,
+                                score: Math.max(similarity, contextSimilarity),
+                                excerpt: excerpt,
+                                exactMatch: similarity > 0.9
+                            });
+                        }
+                    }
+                }
+
+                // Estrategia 2: Buscar patrones estructurales (para HTML/JS)
+                if (originalText.includes('<') && insertText.includes('<')) {
+                    const htmlResults = this.analyzeHTMLStructure(originalText, insertText);
+                    results.push(...htmlResults);
+                }
+
+                // Estrategia 3: Buscar funciones/clases similares
+                const functionResults = this.analyzeFunctions(originalText, insertText);
+                results.push(...functionResults);
+
+                // Filtrar y ordenar resultados
+                const filteredResults = results
+                    .filter(result => result.score > 0.3) // Filtro más permisivo
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 5);
+
+                console.log(`✅ Encontradas ${filteredResults.length} coincidencias`);
+                return filteredResults;
+            }
+
+            static calculateSimilarity(str1, str2) {
+                if (str1 === str2) return 1.0;
+                if (!str1 || !str2) return 0;
+
+                // Normalizar strings
+                const norm1 = str1.trim().toLowerCase().replace(/\s+/g, ' ');
+                const norm2 = str2.trim().toLowerCase().replace(/\s+/g, ' ');
+
+                if (norm1 === norm2) return 0.95;
+
+                // Similitud por tokens
+                const tokens1 = norm1.split(/\b/).filter(t => t.trim().length > 2);
+                const tokens2 = norm2.split(/\b/).filter(t => t.trim().length > 2);
+
+                if (tokens1.length === 0 || tokens2.length === 0) return 0;
+
+                const commonTokens = tokens1.filter(token => 
+                    tokens2.some(t => t.includes(token) || token.includes(t))
+                ).length;
+
+                return commonTokens / Math.max(tokens1.length, tokens2.length);
+            }
+
+            static analyzeContext(originalLines, insertLines, origIndex, insertIndex) {
+                let totalSimilarity = 0;
+                let comparisons = 0;
+
+                // Comparar líneas alrededor del match
+                for (let offset = -2; offset <= 2; offset++) {
+                    const origLine = originalLines[origIndex + offset];
+                    const insertLine = insertLines[insertIndex + offset];
+                    
+                    if (origLine && insertLine) {
+                        totalSimilarity += this.calculateSimilarity(origLine, insertLine);
+                        comparisons++;
+                    }
+                }
+
+                return comparisons > 0 ? totalSimilarity / comparisons : 0;
+            }
+
+            static analyzeHTMLStructure(originalText, insertText) {
+                const results = [];
+                
+                // Buscar etiquetas HTML similares
+                const originalTags = originalText.match(/<(\w+)[^>]*>/g) || [];
+                const insertTags = insertText.match(/<(\w+)[^>]*>/g) || [];
+                
+                originalTags.forEach((tag, index) => {
+                    insertTags.forEach(insertTag => {
+                        if (tag === insertTag) {
+                            // Encontrar la posición de esta etiqueta en el original
+                            const position = originalText.indexOf(tag);
+                            const lines = originalText.substring(0, position).split('\n');
+                            const lineNumber = lines.length;
+                            
+                            results.push({
+                                startLine: lineNumber,
+                                endLine: lineNumber,
+                                score: 0.8,
+                                excerpt: tag,
+                                exactMatch: true
+                            });
+                        }
+                    });
+                });
+
+                return results;
+            }
+
+            static analyzeFunctions(originalText, insertText) {
+                const results = [];
+                
+                // Buscar declaraciones de función
+                const functionPattern = /(function\s+\w+|const\s+\w+\s*=\s*\(|class\s+\w+)/g;
+                const originalFuncs = originalText.match(functionPattern) || [];
+                const insertFuncs = insertText.match(functionPattern) || [];
+                
+                originalFuncs.forEach(func => {
+                    insertFuncs.forEach(insertFunc => {
+                        const similarity = this.calculateSimilarity(func, insertFunc);
+                        if (similarity > 0.6) {
+                            const position = originalText.indexOf(func);
+                            const lines = originalText.substring(0, position).split('\n');
+                            const lineNumber = lines.length;
+                            
+                            results.push({
+                                startLine: lineNumber,
+                                endLine: lineNumber + 5, // Aproximadamente 5 líneas para la función
+                                score: similarity,
+                                excerpt: func + '...',
+                                exactMatch: similarity > 0.9
+                            });
+                        }
+                    });
+                });
+
+                return results;
+            }
+        }
+
+        // ========== SISTEMA DE VALIDACIÓN MEJORADO ==========
+        class FixedValidator {
+            static validateCode(code) {
+                const warnings = [];
+                
+                if (!code.trim()) {
+                    warnings.push('El código está vacío');
+                    return warnings;
+                }
+
+                // Validaciones básicas de HTML
+                if (code.includes('<html') && !code.includes('</html>')) {
+                    warnings.push('Etiqueta HTML sin cerrar');
+                }
+                if (code.includes('<head') && !code.includes('</head>')) {
+                    warnings.push('Etiqueta HEAD sin cerrar');
+                }
+                if (code.includes('<body') && !code.includes('</body>')) {
+                    warnings.push('Etiqueta BODY sin cerrar');
+                }
+
+                // Validaciones de JavaScript básicas
+                const openBraces = (code.match(/{/g) || []).length;
+                const closeBraces = (code.match(/}/g) || []).length;
+                if (openBraces !== closeBraces) {
+                    warnings.push(`Llaves desbalanceadas: ${openBraces} aperturas vs ${closeBraces} cierres`);
+                }
+
+                const openParens = (code.match(/\(/g) || []).length;
+                const closeParens = (code.match(/\)/g) || []).length;
+                if (openParens !== closeParens) {
+                    warnings.push(`Paréntesis desbalanceados: ${openParens} aperturas vs ${closeParens} cierres`);
+                }
+
+                return warnings;
+            }
+        }
+
+        // ========== SISTEMA DE NOTIFICACIONES ==========
         class NotificationSystem {
             static show(message, type = 'info') {
                 const notification = document.createElement('div');
@@ -448,384 +985,7 @@
             }
         }
 
-        // ALGORITMO MEJORADO DE COMPARACIÓN
-        class ImprovedAnalyzer {
-            static analyzeLocal(originalText, insertText) {
-                if (!insertText.trim()) {
-                    throw new Error('El fragmento a insertar está vacío');
-                }
-
-                console.log("=== INICIANDO ANÁLISIS MEJORADO ===");
-                console.log("Longitud original:", originalText.length);
-                console.log("Longitud insert:", insertText.length);
-
-                // Múltiples estrategias de comparación
-                const strategies = [
-                    this.analyzeByLines(originalText, insertText),
-                    this.analyzeByBlocks(originalText, insertText),
-                    this.analyzeByStructure(originalText, insertText),
-                    this.analyzeByKeywords(originalText, insertText)
-                ];
-
-                // Combinar resultados de todas las estrategias
-                let allResults = [];
-                strategies.forEach((results, index) => {
-                    console.log(`Estrategia ${index + 1} encontró:`, results.length, "resultados");
-                    allResults = allResults.concat(results);
-                });
-
-                // Agrupar y ordenar resultados
-                const finalResults = this.mergeAndSortResults(allResults, originalText);
-                
-                console.log("=== RESULTADOS FINALES ===");
-                console.log("Total de coincidencias encontradas:", finalResults.length);
-                finalResults.forEach((result, idx) => {
-                    console.log(`Coincidencia ${idx + 1}: ${Math.round(result.score * 100)}% - Líneas ${result.startLine}-${result.endLine}`);
-                });
-
-                return finalResults.slice(0, 5); // Top 5 resultados
-            }
-
-            // Estrategia 1: Comparación por líneas
-            static analyzeByLines(originalText, insertText) {
-                const results = [];
-                const originalLines = originalText.split('\n');
-                const insertLines = insertText.split('\n').filter(line => line.trim().length > 0);
-                
-                if (insertLines.length === 0) return results;
-
-                // Buscar secuencias de líneas similares
-                for (let i = 0; i <= originalLines.length - insertLines.length; i++) {
-                    let matchCount = 0;
-                    let totalScore = 0;
-
-                    for (let j = 0; j < insertLines.length && (i + j) < originalLines.length; j++) {
-                        const similarity = this.calculateLineSimilarity(originalLines[i + j], insertLines[j]);
-                        if (similarity > 0.6) { // Umbral más bajo para líneas individuales
-                            matchCount++;
-                            totalScore += similarity;
-                        }
-                    }
-
-                    if (matchCount >= Math.max(1, insertLines.length * 0.3)) { // Al menos 30% de coincidencia
-                        const avgScore = totalScore / matchCount;
-                        results.push({
-                            startLine: i + 1,
-                            endLine: i + insertLines.length,
-                            score: avgScore * (matchCount / insertLines.length),
-                            excerpt: originalLines.slice(i, i + 5).join('\n'), // Primeras 5 líneas
-                            strategy: 'lines'
-                        });
-                    }
-                }
-
-                return results;
-            }
-
-            // Estrategia 2: Comparación por bloques estructurales
-            static analyzeByBlocks(originalText, insertText) {
-                const results = [];
-                
-                // Extraer bloques estructurales (funciones, clases, elementos HTML)
-                const originalBlocks = this.extractStructuralBlocks(originalText);
-                const insertBlocks = this.extractStructuralBlocks(insertText);
-
-                console.log("Bloques originales:", originalBlocks.length);
-                console.log("Bloques insert:", insertBlocks.length);
-
-                insertBlocks.forEach(insertBlock => {
-                    originalBlocks.forEach(originalBlock => {
-                        const similarity = this.calculateBlockSimilarity(originalBlock.content, insertBlock.content);
-                        if (similarity > 0.4) {
-                            results.push({
-                                startLine: originalBlock.startLine,
-                                endLine: originalBlock.endLine,
-                                score: similarity,
-                                excerpt: originalBlock.content.substring(0, 200) + '...',
-                                strategy: 'blocks'
-                            });
-                        }
-                    });
-                });
-
-                return results;
-            }
-
-            // Estrategia 3: Comparación por estructura general
-            static analyzeByStructure(originalText, insertText) {
-                const results = [];
-                
-                // Normalizar textos para comparación estructural
-                const normalizedOriginal = this.normalizeForStructuralComparison(originalText);
-                const normalizedInsert = this.normalizeForStructuralComparison(insertText);
-
-                // Buscar subcadenas largas comunes
-                const commonSubstrings = this.findLongCommonSubstrings(normalizedOriginal, normalizedInsert);
-                
-                commonSubstrings.forEach(substring => {
-                    if (substring.length > 20) { // Solo subcadenas significativas
-                        const positions = this.findAllOccurrences(originalText, substring);
-                        positions.forEach(pos => {
-                            const lines = this.getLineRange(originalText, pos, pos + substring.length);
-                            results.push({
-                                startLine: lines.start,
-                                endLine: lines.end,
-                                score: Math.min(1.0, substring.length / 100), // Score basado en longitud
-                                excerpt: substring.substring(0, 150) + '...',
-                                strategy: 'structure'
-                            });
-                        });
-                    }
-                });
-
-                return results;
-            }
-
-            // Estrategia 4: Comparación por palabras clave importantes
-            static analyzeByKeywords(originalText, insertText) {
-                const results = [];
-                
-                const originalKeywords = this.extractKeywords(originalText);
-                const insertKeywords = this.extractKeywords(insertText);
-                
-                const commonKeywords = originalKeywords.filter(kw => 
-                    insertKeywords.some(ikw => this.calculateSimilarity(kw, ikw) > 0.8)
-                );
-
-                if (commonKeywords.length > 0) {
-                    // Buscar áreas con alta densidad de palabras clave comunes
-                    const lines = originalText.split('\n');
-                    for (let i = 0; i < lines.length; i++) {
-                        let keywordCount = 0;
-                        commonKeywords.forEach(keyword => {
-                            if (lines[i].toLowerCase().includes(keyword.toLowerCase())) {
-                                keywordCount++;
-                            }
-                        });
-
-                        if (keywordCount >= 2) { // Al menos 2 palabras clave en la misma línea
-                            results.push({
-                                startLine: i + 1,
-                                endLine: i + 1,
-                                score: Math.min(0.7, keywordCount * 0.2),
-                                excerpt: lines[i],
-                                strategy: 'keywords'
-                            });
-                        }
-                    }
-                }
-
-                return results;
-            }
-
-            // Métodos auxiliares mejorados
-            static calculateLineSimilarity(line1, line2) {
-                if (!line1 || !line2) return 0;
-                
-                // Normalizar líneas
-                const norm1 = this.normalizeLine(line1);
-                const norm2 = this.normalizeLine(line2);
-                
-                if (norm1 === norm2) return 1.0;
-                
-                // Similitud por tokens
-                const tokens1 = new Set(norm1.split(/\s+/).filter(t => t.length > 2));
-                const tokens2 = new Set(norm2.split(/\s+/).filter(t => t.length > 2));
-                
-                const intersection = new Set([...tokens1].filter(x => tokens2.has(x)));
-                const union = new Set([...tokens1, ...tokens2]);
-                
-                return union.size > 0 ? intersection.size / union.size : 0;
-            }
-
-            static normalizeLine(line) {
-                return line
-                    .trim()
-                    .replace(/\s+/g, ' ')
-                    .replace(/[^\w\s<>\/="':-]/g, '') // Mantener caracteres importantes para código
-                    .toLowerCase();
-            }
-
-            static extractStructuralBlocks(text) {
-                const blocks = [];
-                const lines = text.split('\n');
-                let currentBlock = null;
-
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    
-                    // Detectar inicio de bloques
-                    if (line.match(/<(div|section|script|style|function|class)\b/) || 
-                        line.match(/(function|class)\s+\w/) ||
-                        line.includes('{') && !line.includes('}')) {
-                        
-                        if (currentBlock) {
-                            blocks.push(currentBlock);
-                        }
-                        currentBlock = {
-                            startLine: i + 1,
-                            content: line + '\n',
-                            type: this.detectBlockType(line)
-                        };
-                    } 
-                    // Continuar bloque actual
-                    else if (currentBlock) {
-                        currentBlock.content += line + '\n';
-                        
-                        // Detectar fin de bloque
-                        if (line.includes('</') || line.includes('}') || 
-                            (line === '' && i > currentBlock.startLine + 10)) {
-                            currentBlock.endLine = i + 1;
-                            blocks.push(currentBlock);
-                            currentBlock = null;
-                        }
-                    }
-                }
-
-                if (currentBlock) {
-                    currentBlock.endLine = lines.length;
-                    blocks.push(currentBlock);
-                }
-
-                return blocks;
-            }
-
-            static detectBlockType(line) {
-                if (line.includes('<div')) return 'html';
-                if (line.includes('<script')) return 'script';
-                if (line.includes('<style')) return 'style';
-                if (line.includes('function')) return 'function';
-                if (line.includes('class')) return 'class';
-                return 'unknown';
-            }
-
-            static calculateBlockSimilarity(block1, block2) {
-                const lines1 = block1.split('\n').filter(l => l.trim());
-                const lines2 = block2.split('\n').filter(l => l.trim());
-                
-                if (lines1.length === 0 || lines2.length === 0) return 0;
-                
-                let totalSimilarity = 0;
-                let comparisons = 0;
-                
-                // Comparar líneas correspondientes
-                const minLines = Math.min(lines1.length, lines2.length);
-                for (let i = 0; i < minLines; i++) {
-                    totalSimilarity += this.calculateLineSimilarity(lines1[i], lines2[i]);
-                    comparisons++;
-                }
-                
-                return comparisons > 0 ? totalSimilarity / comparisons : 0;
-            }
-
-            static normalizeForStructuralComparison(text) {
-                return text
-                    .toLowerCase()
-                    .replace(/\s+/g, ' ')
-                    .replace(/<!--.*?-->/g, '') // Remover comentarios
-                    .replace(/\/\*.*?\*\//g, '')
-                    .replace(/\/\/.*$/gm, '')
-                    .trim();
-            }
-
-            static findLongCommonSubstrings(str1, str2) {
-                const substrings = [];
-                const maxLength = 100; // Longitud máxima para evitar sobrecarga
-                
-                for (let len = maxLength; len >= 10; len--) {
-                    for (let i = 0; i <= str1.length - len; i++) {
-                        const substring = str1.substring(i, i + len);
-                        if (str2.includes(substring)) {
-                            substrings.push(substring);
-                            // Saltar adelante para evitar solapamientos
-                            i += len - 1;
-                        }
-                    }
-                    if (substrings.length > 0) break; // Encontrar las más largas primero
-                }
-                
-                return substrings;
-            }
-
-            static findAllOccurrences(text, substring) {
-                const positions = [];
-                let pos = text.indexOf(substring);
-                while (pos !== -1) {
-                    positions.push(pos);
-                    pos = text.indexOf(substring, pos + 1);
-                }
-                return positions;
-            }
-
-            static getLineRange(text, startPos, endPos) {
-                const lines = text.split('\n');
-                let currentPos = 0;
-                let startLine = 1;
-                let endLine = 1;
-                
-                for (let i = 0; i < lines.length; i++) {
-                    const lineLength = lines[i].length + 1; // +1 por el \n
-                    if (currentPos <= startPos && startPos < currentPos + lineLength) {
-                        startLine = i + 1;
-                    }
-                    if (currentPos <= endPos && endPos < currentPos + lineLength) {
-                        endLine = i + 1;
-                        break;
-                    }
-                    currentPos += lineLength;
-                }
-                
-                return { start: startLine, end: endLine };
-            }
-
-            static extractKeywords(text) {
-                // Palabras clave comunes en código
-                const commonKeywords = ['function', 'class', 'var', 'let', 'const', 'return', 'if', 'else', 'for', 'while'];
-                const words = text.toLowerCase().match(/\b\w+\b/g) || [];
-                
-                return words.filter(word => 
-                    word.length > 3 && 
-                    !commonKeywords.includes(word) &&
-                    !word.match(/^\d+$/)
-                ).slice(0, 20); // Limitar a 20 palabras clave
-            }
-
-            static calculateSimilarity(str1, str2) {
-                const set1 = new Set(str1.toLowerCase());
-                const set2 = new Set(str2.toLowerCase());
-                const intersection = new Set([...set1].filter(x => set2.has(x)));
-                const union = new Set([...set1, ...set2]);
-                return union.size > 0 ? intersection.size / union.size : 0;
-            }
-
-            static mergeAndSortResults(results, originalText) {
-                // Agrupar resultados similares
-                const merged = [];
-                const usedPositions = new Set();
-                
-                results.forEach(result => {
-                    const key = `${result.startLine}-${result.endLine}`;
-                    if (!usedPositions.has(key)) {
-                        usedPositions.add(key);
-                        
-                        // Mejorar el score basado en la estrategia
-                        let enhancedScore = result.score;
-                        if (result.strategy === 'structure') enhancedScore *= 1.2;
-                        if (result.strategy === 'blocks') enhancedScore *= 1.1;
-                        
-                        merged.push({
-                            ...result,
-                            score: Math.min(1.0, enhancedScore)
-                        });
-                    }
-                });
-                
-                // Ordenar por score descendente
-                return merged.sort((a, b) => b.score - a.score);
-            }
-        }
-
-        // Funciones principales
+        // ========== FUNCIONES PRINCIPALES CORREGIDAS ==========
         function runLocalAnalysis() {
             try {
                 const originalText = originalEl.value;
@@ -836,16 +996,18 @@
                 }
 
                 console.clear();
-                console.log("=== EJECUTANDO ANÁLISIS MEJORADO ===");
-                
-                const results = ImprovedAnalyzer.analyzeLocal(originalText, insertText);
+                const results = FixedAnalyzer.analyzeLocal(originalText, insertText);
                 state.suggestions = results;
                 state.originalContent = originalText;
 
                 displayResults(results);
                 updateAnalysisInfo(results);
 
-                NotificationSystem.show(`Encontradas ${results.length} coincidencias`, 'success');
+                if (results.length === 0) {
+                    NotificationSystem.show('No se encontraron coincidencias exactas. Revisa manualmente.', 'warning');
+                } else {
+                    NotificationSystem.show(`Encontradas ${results.length} coincidencias`, 'success');
+                }
 
             } catch (error) {
                 NotificationSystem.show(`Error: ${error.message}`, 'error');
@@ -860,7 +1022,7 @@
             }
 
             if (results.length === 0) {
-                suggestionList.innerHTML = '<p class="placeholder-text">No se encontraron coincidencias significativas</p>';
+                suggestionList.innerHTML = '<p class="placeholder-text">No se encontraron coincidencias significativas. Considera revisar manualmente las áreas similares.</p>';
                 suggestionList.style.display = 'block';
                 return;
             }
@@ -869,7 +1031,7 @@
                 <div class="suggestion-item ${index === 0 ? 'selected' : ''}" 
                      onclick="selectSuggestion(${index})">
                     <span class="suggestion-score">${Math.round(result.score * 100)}% coincidencia</span>
-                    <small style="color: var(--text-secondary);">Estrategia: ${result.strategy}</small>
+                    ${result.exactMatch ? '<span class="suggestion-warning">✅ EXACTA</span>' : ''}
                     <div class="suggestion-excerpt">Líneas ${result.startLine}-${result.endLine}:\n${result.excerpt}</div>
                 </div>
             `).join('');
@@ -912,16 +1074,24 @@
                 return;
             }
 
+            // Validar antes de aplicar
+            const warnings = FixedValidator.validateCode(insertEl.value);
+            if (warnings.length > 0) {
+                NotificationSystem.show(`Advertencias: ${warnings.join(', ')}`, 'warning');
+            }
+
             const modifiedCode = applyCodeChanges(mode);
-            NotificationSystem.show('Cambios aplicados. Revisa el resultado.', 'success');
-            originalEl.value = modifiedCode;
+            showExportDialog(modifiedCode, warnings);
         }
 
         function applyCodeChanges(mode) {
             const lines = originalEl.value.split('\n');
             const insertContent = insertEl.value;
             const startIndex = state.chosen.startLine - 1;
+            const endIndex = state.chosen.endLine - 1;
             
+            console.log(`Aplicando cambio: ${mode} en líneas ${startIndex + 1}-${endIndex + 1}`);
+
             let modifiedLines;
 
             switch (mode) {
@@ -929,7 +1099,7 @@
                     modifiedLines = [
                         ...lines.slice(0, startIndex),
                         insertContent,
-                        ...lines.slice(state.chosen.endLine)
+                        ...lines.slice(endIndex + 1)
                     ];
                     break;
                 case 'above':
@@ -941,9 +1111,9 @@
                     break;
                 case 'below':
                     modifiedLines = [
-                        ...lines.slice(0, state.chosen.endLine),
+                        ...lines.slice(0, endIndex + 1),
                         insertContent,
-                        ...lines.slice(state.chosen.endLine)
+                        ...lines.slice(endIndex + 1)
                     ];
                     break;
                 default:
@@ -953,26 +1123,81 @@
             return modifiedLines.join('\n');
         }
 
-        function showDebugInfo() {
-            const info = `
-                === INFORMACIÓN DE DEBUG ===
-                Longitud original: ${originalEl.value.length}
-                Longitud insert: ${insertEl.value.length}
-                Coincidencias encontradas: ${state.suggestions.length}
-                Última estrategia: ${state.chosen?.strategy || 'N/A'}
-                
-                Primeras 200 chars original:
-                ${originalEl.value.substring(0, 200)}
-                
-                Primeras 200 chars insert:
-                ${insertEl.value.substring(0, 200)}
-            `;
+        function showExportDialog(modifiedCode, warnings = []) {
+            state.modifiedContent = modifiedCode;
             
-            debugInfo.textContent = info;
-            debugInfo.style.display = 'block';
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Confirmar Cambios ${warnings.length > 0 ? '⚠️' : ''}</h3>
+                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="modal-content">
+                        ${warnings.length > 0 ? `
+                            <div class="validation-warnings">
+                                <h4>Advertencias:</h4>
+                                ${warnings.map(warning => `
+                                    <div class="validation-warning">⚠️ ${warning}</div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <p>Revisa los cambios antes de descargar:</p>
+                        
+                        <div class="code-comparison">
+                            <div class="code-block">
+                                <div class="code-block-header">Original</div>
+                                <div class="code-block-content">${state.originalContent.substring(0, 500)}...</div>
+                            </div>
+                            <div class="code-block">
+                                <div class="code-block-header">Modificado</div>
+                                <div class="code-block-content">${modifiedCode.substring(0, 500)}...</div>
+                            </div>
+                        </div>
+
+                        <div class="export-options">
+                            <label>
+                                Nombre de archivo:
+                                <input type="text" class="filename-input" id="exportFilename" 
+                                       value="${FileNameManager.generateSmartFilename(state.currentFiles.original.name)}">
+                            </label>
+                            <div class="action-buttons">
+                                <button class="btn btn-success" onclick="confirmExport()">Descargar</button>
+                                <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
         }
 
-        // Funciones de utilidad
+        function confirmExport() {
+            const filenameInput = document.getElementById('exportFilename');
+            const filename = filenameInput.value || FileNameManager.generateSmartFilename();
+            
+            downloadText(state.modifiedContent, filename);
+            
+            document.querySelector('.modal-overlay').remove();
+            NotificationSystem.show(`Archivo "${filename}" descargado correctamente`, 'success');
+        }
+
+        function downloadText(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ========== FUNCIONES AUXILIARES ==========
         function clearOriginal() {
             originalEl.value = '';
             NotificationSystem.show('Ventana original limpiada', 'info');
@@ -989,22 +1214,9 @@
 <html>
 <head>
     <title>Ejemplo Original</title>
-    <style>
-        body { margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Mi Aplicación</h1>
-        <p>Este es un ejemplo de código HTML.</p>
-    </div>
-    <script>
-        function init() {
-            console.log("Aplicación iniciada");
-        }
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+    <h1>Mi Aplicación</h1>
 </body>
 </html>`,
 
@@ -1013,33 +1225,12 @@
 <head>
     <title>Ejemplo Mejorado</title>
     <style>
-        body { 
-            margin: 0; 
-            padding: 20px; 
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
-        }
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-        }
+        body { font-family: Arial; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Mi Aplicación Mejorada</h1>
-        <p>Este es el código HTML mejorado con nuevos estilos.</p>
-    </div>
-    <script>
-        function enhancedInit() {
-            console.log("Aplicación mejorada iniciada");
-            // Nuevas funcionalidades aquí
-        }
-        document.addEventListener('DOMContentLoaded', enhancedInit);
-    </script>
+    <h1>Mi Aplicación Mejorada</h1>
+    <p>Nuevo contenido</p>
 </body>
 </html>`
             };
@@ -1050,498 +1241,32 @@
                 insertEl.value = examples.insert;
             }
 
-            NotificationSystem.show('Ejemplo cargado - Ahora prueba el análisis!', 'success');
+            NotificationSystem.show('Ejemplo cargado', 'success');
         }
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            NotificationSystem.show('CodeInsertor v1.4 - Algoritmo mejorado cargado!', 'success');
-        });
-    </script>
-</body>
-</html>
-                        const changeImpact = this.analyzeChangeImpact(excerpt, tokensInsert.join(' '));
-                        
-                        results.push({
-                            startLine,
-                            endLine,
-                            score: similarity,
-                            excerpt: excerpt,
-                            changeImpact: changeImpact,
-                            isRisky: changeImpact.level === 'high' || changeImpact.warnings.length > 0
-                        });
-                    }
-                }
-
-                return results.sort((a, b) => b.score - a.score).slice(0, 5);
-            }
-
-            static analyzeChangeImpact(originalExcerpt, insertText) {
-                const impact = CodeValidator.calculateChangeImpact(originalExcerpt, insertText);
-                const warnings = [];
-                
-                // Análisis de riesgo adicional
-                if (impact.level === 'high') {
-                    warnings.push('Cambio muy extenso detectado');
-                }
-                
-                if (originalExcerpt.length < insertText.length * 0.1) {
-                    warnings.push('Posible reemplazo completo de sección');
-                }
-
-                return {
-                    level: impact.level,
-                    warnings: warnings,
-                    changes: impact.changes
-                };
-            }
-
-            static jaccardSimilarity(setA, setB) {
-                const intersection = new Set([...setA].filter(x => setB.has(x)));
-                const union = new Set([...setA, ...setB]);
-                return intersection.size / union.size;
-            }
-
-            static findLineNumber(text, tokenIndex) {
-                const lines = text.split('\n');
-                let currentLength = 0;
-                
-                for (let i = 0; i < lines.length; i++) {
-                    const lineTokens = this.tokenize(lines[i]);
-                    if (tokenIndex < lineTokens.length) {
-                        return i + 1;
-                    }
-                    tokenIndex -= lineTokens.length;
-                }
-                
-                return lines.length;
-            }
-
-            static getExcerpt(text, startLine, endLine) {
-                const lines = text.split('\n');
-                return lines.slice(Math.max(0, startLine - 2), endLine + 1).join('\n');
-            }
-        }
-
-        // Funciones principales mejoradas
-        function runLocalAnalysis() {
-            setStatus('analyzing', 'Analizando código...');
-
-            try {
-                // Validar que tenemos contenido
-                if (!originalEl.value.trim()) {
-                    throw new Error('El código original está vacío');
-                }
-
-                if (!insertEl.value.trim()) {
-                    throw new Error('El fragmento a insertar está vacío');
-                }
-
-                const results = LocalAnalyzer.analyzeLocal(originalEl.value, insertEl.value);
-                state.suggestions = results;
-                state.originalContent = originalEl.value;
-
-                // Mostrar advertencia si hay múltiples secciones
-                if (results.length > 1) {
-                    NotificationSystem.show(
-                        `⚠️ Se detectaron ${results.length} secciones coincidentes. ` +
-                        `Solo se reemplazará UNA sección a la vez. ` +
-                        `Selecciona cuidadosamente la sección correcta.`,
-                        'warning',
-                        6000
-                    );
-                }
-
-                displayResults(results);
-                updateAnalysisInfo(results);
-                setStatus('success', 'Análisis completado');
-
-                NotificationSystem.show(`Encontradas ${results.length} coincidencias`, 'success');
-            } catch (error) {
-                setStatus('error', 'Error en análisis');
-                NotificationSystem.show(`Error: ${error.message}`, 'error');
-                console.error('Error en análisis:', error);
-            }
-        }
-
-        function displayResults(results) {
-            const placeholder = resultsContainer.querySelector('.placeholder-text');
-            if (placeholder) {
-                placeholder.style.display = 'none';
-            }
-
-            if (results.length === 0) {
-                suggestionList.innerHTML = '<p class="placeholder-text">No se encontraron coincidencias significativas</p>';
-                suggestionList.style.display = 'block';
-                stickyActions.style.display = 'none';
-                return;
-            }
-
-            suggestionList.innerHTML = results.map((result, index) => `
-                <div class="suggestion-item ${result.isRisky ? 'warning' : ''} ${index === 0 ? 'selected' : ''}" 
-                     onclick="selectSuggestion(${index})">
-                    <span class="suggestion-score">${Math.round(result.score * 100)}% coincidencia</span>
-                    ${result.isRisky ? '<span class="suggestion-warning">⚠️ RIESGO</span>' : ''}
-                    <div class="suggestion-excerpt">Líneas ${result.startLine}-${result.endLine}:\n${result.excerpt}</div>
-                    ${result.changeImpact.warnings.length > 0 ? 
-                        `<div class="file-size-warning">${result.changeImpact.warnings[0]}</div>` : ''}
-                </div>
-            `).join('');
-
-            suggestionList.style.display = 'block';
-            stickyActions.style.display = 'block';
-            state.chosen = results[0];
-            
-            // Habilitar botones de acción
-            replaceBtn.disabled = false;
-            aboveBtn.disabled = false;
-            belowBtn.disabled = false;
-        }
-
-        function updateAnalysisInfo(results) {
-            if (results.length === 0) {
-                matchPercentage.textContent = 'Coincidencia: 0%';
-                analysisStats.textContent = 'Sin coincidencias';
-                state.currentMatchPercentage = 0;
-                return;
-            }
-
-            const bestMatch = results[0];
-            const percentage = Math.round(bestMatch.score * 100);
-            state.currentMatchPercentage = percentage;
-            
-            matchPercentage.textContent = `Coincidencia: ${percentage}%`;
-            analysisStats.textContent = `${results.length} sugerencias · ${bestMatch.isRisky ? '⚠️ ' : ''}Líneas ${bestMatch.startLine}-${bestMatch.endLine}`;
-        }
-
-        function selectSuggestion(index) {
-            document.querySelectorAll('.suggestion-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-
-            document.querySelectorAll('.suggestion-item')[index].classList.add('selected');
-            state.chosen = state.suggestions[index];
-            
-            // Mostrar advertencia si la selección es riesgosa
-            if (state.chosen.isRisky) {
-                NotificationSystem.show(
-                    '⚠️ Esta selección tiene indicadores de riesgo. ' +
-                    'Revisa cuidadosamente antes de aplicar cambios.',
-                    'warning',
-                    5000
-                );
-            }
-            
-            updateAnalysisInfo(state.suggestions);
-        }
-
-        function applyEdit(mode) {
-            if (!state.chosen) {
-                NotificationSystem.show('Por favor selecciona una sugerencia primero', 'warning');
-                return;
-            }
-
-            // Validación final antes de aplicar cambios
-            const validationWarnings = CodeValidator.validateSyntax(insertEl.value);
-            const changeImpact = CodeValidator.calculateChangeImpact(
-                state.chosen.excerpt, 
-                insertEl.value
-            );
-
-            // Mostrar advertencias de validación
-            if (validationWarnings.length > 0) {
-                NotificationSystem.showValidationWarnings(validationWarnings, 'en el fragmento');
-            }
-
-            // Mostrar advertencia de impacto alto
-            if (changeImpact.level === 'high') {
-                showHighImpactWarning(mode, changeImpact);
-            } else {
-                const modifiedCode = applyCodeChanges(mode);
-                showExportDialog(modifiedCode, validationWarnings);
-            }
-        }
-
-        function showHighImpactWarning(mode, changeImpact) {
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>⚠️ Cambio de Alto Impacto Detectado</h3>
-                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">×</button>
-                    </div>
-                    <div class="modal-content">
-                        <div class="validation-warnings">
-                            <div class="validation-warning">⚠️ Este cambio afectará ${changeImpact.changes.totalChanges} líneas</div>
-                            <div class="validation-warning">⚠️ Se reemplazarán ${state.chosen.endLine - state.chosen.startLine + 1} líneas de código</div>
-                            <div class="validation-warning">🔍 Revisa cuidadosamente que esta es la sección correcta</div>
-                        </div>
-                        <p>¿Estás seguro de que quieres continuar con este cambio?</p>
-                        <div class="action-buttons" style="margin-top: 1rem;">
-                            <button class="btn btn-danger" onclick="proceedWithChange('${mode}')">Sí, Continuar</button>
-                            <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        function proceedWithChange(mode) {
-            document.querySelector('.modal-overlay').remove();
-            const modifiedCode = applyCodeChanges(mode);
-            const validationWarnings = CodeValidator.validateSyntax(insertEl.value);
-            showExportDialog(modifiedCode, validationWarnings);
-        }
-
-        function applyCodeChanges(mode) {
-            const lines = originalEl.value.split('\n');
-            const insertContent = insertEl.value;
-            const startIndex = state.chosen.startLine - 1;
-            const endIndex = state.chosen.endLine;
-            
-            let modifiedLines;
-
-            switch (mode) {
-                case 'replace':
-                    modifiedLines = [
-                        ...lines.slice(0, startIndex),
-                        insertContent,
-                        ...lines.slice(endIndex)
-                    ];
-                    break;
-                case 'above':
-                    modifiedLines = [
-                        ...lines.slice(0, startIndex),
-                        insertContent,
-                        ...lines.slice(startIndex)
-                    ];
-                    break;
-                case 'below':
-                    modifiedLines = [
-                        ...lines.slice(0, endIndex),
-                        insertContent,
-                        ...lines.slice(endIndex)
-                    ];
-                    break;
-                default:
-                    modifiedLines = lines;
-            }
-
-            return modifiedLines.join('\n');
-        }
-
-        function showExportDialog(modifiedCode, validationWarnings = []) {
-            state.modifiedContent = modifiedCode;
-            
-            // Validar el código resultante
-            const finalWarnings = CodeValidator.validateSyntax(modifiedCode);
-            const allWarnings = [...validationWarnings, ...finalWarnings];
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>Confirmar Cambios ${allWarnings.length > 0 ? '⚠️' : ''}</h3>
-                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">×</button>
-                    </div>
-                    <div class="modal-content">
-                        ${allWarnings.length > 0 ? `
-                            <div class="validation-warnings">
-                                <h4>Advertencias de Validación:</h4>
-                                ${allWarnings.map(warning => `
-                                    <div class="validation-warning">⚠️ ${warning}</div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        
-                        <p>Revisa los cambios antes de descargar:</p>
-                        
-                        <div class="code-comparison">
-                            <div class="code-block">
-                                <div class="code-block-header">Original (${state.currentFiles.original.name})</div>
-                                <div class="code-block-content">${highlightChanges(state.originalContent, 'original')}</div>
-                            </div>
-                            <div class="code-block">
-                                <div class="code-block-header">Modificado</div>
-                                <div class="code-block-content">${highlightChanges(modifiedCode, 'modified')}</div>
-                            </div>
-                        </div>
-
-                        <div class="export-options">
-                            <label>
-                                Nombre de archivo:
-                                <input type="text" class="filename-input" id="exportFilename" 
-                                       value="${generateSmartFilename(state.currentFiles.original.name)}" 
-                                       onchange="validateFilename(this)">
-                            </label>
-                            <div class="action-buttons">
-                                <button class="btn btn-success" onclick="confirmExport()">Descargar ${allWarnings.length > 0 ? '⚠️' : ''}</button>
-                                <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-        }
-
-        // Funciones de validación en tiempo real
-        function validateOriginalCode() {
-            const warnings = CodeValidator.validateSyntax(originalEl.value);
-            if (warnings.length > 0) {
-                setStatus('warning', 'Problemas en código original');
-            } else {
-                setStatus('success', 'Código original válido');
-            }
-        }
-
-        function validateInsertCode() {
-            const warnings = CodeValidator.validateSyntax(insertEl.value);
-            if (warnings.length > 0) {
-                setStatus('warning', 'Problemas en fragmento');
-            }
-        }
-
-        // Gestión de archivos mejorada
         function handleFileUpload(event, type) {
             const file = event.target.files[0];
             if (!file) return;
-
-            // Validar tamaño de archivo
-            if (file.size > 1024 * 1024) { // 1MB
-                NotificationSystem.show('Archivo muy grande (>1MB). Considera usar archivos más pequeños.', 'warning');
-                return;
-            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 if (type === 'original') {
                     originalEl.value = e.target.result;
-                    state.originalContent = e.target.result;
-                    state.currentFiles.original = {
-                        name: file.name,
-                        size: file.size,
-                        path: file.name // En navegador, usamos el nombre como path
-                    };
-                    updateFileDisplay('original', file.name, file.size);
+                    state.currentFiles.original.name = file.name;
                 } else {
                     insertEl.value = e.target.result;
-                    state.currentFiles.insert = {
-                        name: file.name,
-                        size: file.size,
-                        path: file.name
-                    };
-                    updateFileDisplay('insert', file.name, file.size);
+                    state.currentFiles.insert.name = file.name;
                 }
                 
-                // Validar el código cargado
-                const warnings = CodeValidator.validateSyntax(e.target.result);
-                if (warnings.length > 0) {
-                    NotificationSystem.showValidationWarnings(warnings, `en ${file.name}`);
-                }
-                
-                NotificationSystem.show(`Archivo ${file.name} cargado (${(file.size/1024).toFixed(1)}KB)`, 'success');
+                NotificationSystem.show(`Archivo ${file.name} cargado`, 'success');
             };
             reader.readAsText(file);
         }
 
-        function updateFileDisplay(type, filename, size) {
-            const sizeText = size > 1024 ? `${(size/1024).toFixed(1)}KB` : `${size}B`;
-            
-            if (type === 'original') {
-                originalFileName.textContent = filename;
-                originalFileSize.textContent = sizeText;
-            } else {
-                insertFileName.textContent = filename;
-                insertFileSize.textContent = sizeText;
-            }
-        }
-
-        // ... (resto de las funciones se mantienen similares pero mejoradas)
-
-        function setStatus(status, message) {
-            state.status = status;
-            statusText.textContent = message;
-            statusDot.className = 'status-dot ' + status;
-        }
-
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            setStatus('success', 'Listo para usar');
-            RobustHistoryManager.updateDisplay();
-            
-            // Cargar historial si existe
-            try {
-                const stored = localStorage.getItem('codeinsertor_history');
-                if (stored) {
-                    const data = JSON.parse(stored);
-                    if (data.data && Array.isArray(data.data)) {
-                        state.history = data.data.slice(-state.maxHistory);
-                        RobustHistoryManager.updateDisplay();
-                    }
-                }
-            } catch (error) {
-                console.log('No se pudo cargar historial previo:', error);
-            }
-
-            NotificationSystem.show('CodeInsertor v1.3 - Con validaciones inteligentes!', 'success');
+            NotificationSystem.show('CodeInsertor v1.5 - Problemas críticos corregidos!', 'success');
         });
-
-        // Funciones auxiliares (se mantienen iguales)
-        function highlightChanges(content, type) {
-            return content.split('\n').map(line => {
-                if (type === 'modified' && !state.originalContent.includes(line)) {
-                    return `<span class="diff-added">${line}</span>`;
-                }
-                return line;
-            }).join('\n');
-        }
-
-        function generateSmartFilename(originalName = 'codigo') {
-            const baseName = originalName.replace(/\.[^/.]+$/, "");
-            const extension = originalName.includes('.') ? originalName.split('.').pop() : 'txt';
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-            return `${baseName}-modificado-${timestamp}.${extension}`;
-        }
-
-        function validateFilename(input) {
-            const invalidChars = /[<>:"/\\|?*]/g;
-            if (invalidChars.test(input.value)) {
-                input.style.borderColor = 'var(--error)';
-                NotificationSystem.show('El nombre de archivo contiene caracteres inválidos', 'error');
-            } else {
-                input.style.borderColor = 'var(--border)';
-            }
-        }
-
-        function confirmExport() {
-            const filenameInput = document.getElementById('exportFilename');
-            const filename = filenameInput.value || generateSmartFilename(state.currentFiles.original.name);
-            
-            downloadText(state.modifiedContent, filename);
-            RobustHistoryManager.pushHistory('exportación con validaciones');
-            
-            document.querySelector('.modal-overlay').remove();
-            NotificationSystem.show(`Archivo ${filename} descargado correctamente`, 'success');
-        }
-
-        function downloadText(content, filename) {
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // ... (resto de funciones auxiliares)
     </script>
 </body>
 </html>
