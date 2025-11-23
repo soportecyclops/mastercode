@@ -1,927 +1,1156 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CodeInsertor — Prototipo Profesional</title>
-<style>
-:root {
-  --bg: #0f1724;
-  --panel: #0b1220;
-  --muted: #9aa4b2;
-  --accent: #57b3ff;
-  --success: #7efc88;
-  --hl: #fffb8f;
-  --danger: #ff7b7b;
-  --border: rgba(255, 255, 255, 0.08);
-  --shadow: 0 8px 32px rgba(2, 6, 23, 0.4);
-  --radius: 12px;
-  --transition: all 0.2s ease;
-}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CodeInsertor — Prototipo Profesional Mejorado</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --panel: #0b1220;
+            --accent: #57b3ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
 
-* {
-  box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  background: linear-gradient(180deg, #071020, #071622);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: #e2e8f0;
-  overflow: hidden;
-}
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-.app {
-  display: grid;
-  grid-template-rows: 70px 1fr 80px;
-  height: 100vh;
-  gap: 16px;
-  padding: 16px;
-  width: 100%;
-}
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-/* HEADER */
-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: white;
-  padding: 0 8px;
-  flex-shrink: 0;
-}
+        header {
+            background: var(--panel);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
 
-.logo {
-  font-weight: 800;
-  color: var(--accent);
-  font-size: 20px;
-  letter-spacing: -0.5px;
-}
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-.controls {
-  margin-left: auto;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-/* CONTENIDO PRINCIPAL - 3 COLUMNAS CON SCROLL INDEPENDIENTE */
-.main {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-/* TARJETAS CON SCROLL PROPIO */
-.card {
-  background: var(--panel);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  border: 1px solid var(--border);
-  height: 100%;
-}
+        .main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-/* CONTENEDOR CON SCROLL PARA CADA VENTANA */
-.card-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
+        .pane {
+            background: var(--panel);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+        }
 
-/* HEADER DE CADA VENTANA FIJO */
-.card-header {
-  flex-shrink: 0;
-  margin-bottom: 12px;
-}
+        .pane-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.title {
-  color: var(--muted);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-}
+        .pane-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
 
-/* CUERPO CON SCROLL */
-.card-body {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
+        .pane-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-/* ÁREAS DE CÓDIGO CON SCROLL PROPIO */
-.textarea-container {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
+        textarea {
+            flex: 1;
+            background: #0a0f1a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            color: var(--text);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: none;
+            transition: border-color 0.2s;
+        }
 
-textarea.code {
-  flex: 1;
-  background: #020617;
-  color: #dbe9ff;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  resize: none;
-  padding: 16px;
-  border-radius: 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 13.5px;
-  line-height: 1.5;
-  outline: none;
-  min-height: 200px;
-  width: 100%;
-  overflow: auto;
-}
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(87, 179, 255, 0.1);
+        }
 
-/* BARRA DE HERRAMIENTAS FIJA EN CADA VENTANA */
-.toolbar {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-/* BOTONES */
-button, .btn {
-  background: #0b1320;
-  color: var(--muted);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: var(--transition);
-}
+        .btn:hover {
+            background: #3d9ee8;
+            transform: translateY(-1px);
+        }
 
-button:hover, .btn:hover {
-  background: #0f1829;
-}
+        .btn:active {
+            transform: translateY(0);
+        }
 
-button.primary {
-  background: var(--accent);
-  color: #021023;
-  border: none;
-  font-weight: 600;
-}
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
 
-.small {
-  font-size: 12px;
-  padding: 6px 10px;
-}
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-/* CONTENIDO CON SCROLL EN VENTANA 3 */
-.scrollable-content {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-  padding-right: 5px;
-}
+        .btn-success {
+            background: var(--success);
+        }
 
-/* INFORMACIÓN */
-.match-info {
-  background: linear-gradient(90deg, #07101a, #081422);
-  padding: 14px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 13.5px;
-  margin-bottom: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
+        .btn-success:hover {
+            background: #0da271;
+        }
 
-/* ACCIONES SIEMPRE VISIBLES EN VENTANA 3 */
-.actions-container {
-  flex-shrink: 0;
-  margin-top: auto;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
+        .suggestion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-.alt-list {
-  margin-top: 12px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.06);
-  padding-top: 12px;
-  display: none;
-}
+        .suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+        }
 
-.alt-item {
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-}
+        .suggestion-item.selected {
+            background: rgba(87, 179, 255, 0.1);
+            border-color: var(--accent);
+        }
 
-.meta {
-  font-size: 12.5px;
-  color: var(--muted);
-}
+        .suggestion-score {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
 
-.history {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+        .suggestion-excerpt {
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+        }
 
-.badge {
-  background: #0e1522;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 12.5px;
-}
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
 
-/* FOOTER */
-footer {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--muted);
-  padding: 0 8px;
-  flex-shrink: 0;
-}
+        footer {
+            background: var(--panel);
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
 
-input[type=file] {
-  display: none;
-}
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.file-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
 
-.row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
 
-.chip {
-  background: #071226;
-  color: var(--muted);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12.5px;
-}
+        .status-dot.idle {
+            background: var(--warning);
+        }
 
-.switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
 
-/* PANEL DE DIAGNÓSTICO */
-.diagnostic-panel {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  margin-top: 10px;
-  font-size: 12px;
-}
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
 
-.diagnostic-item {
-  margin: 4px 0;
-  padding: 4px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-}
+        .notification.error {
+            border-left: 4px solid var(--error);
+        }
 
-.status-ok { color: var(--success); }
-.status-error { color: var(--danger); }
-.status-warning { color: var(--hl); }
+        .notification.warning {
+            border-left: 4px solid var(--warning);
+        }
 
-.test-button {
-  background: #1a472a;
-  color: var(--success);
-  border: 1px solid var(--success);
-}
+        .notification .close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* SCROLLBAR PERSONALIZADO */
-::-webkit-scrollbar {
-  width: 8px;
-}
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 4px;
-}
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
+        .modal {
+            background: var(--panel);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-/* RESPONSIVE */
-@media (max-width: 1200px) {
-  .main {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-  }
-  
-  #pane-analysis {
-    grid-column: span 2;
-  }
-}
+        .modal-content {
+            padding: 1.5rem;
+        }
 
-@media (max-width: 768px) {
-  .main {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-  }
-  
-  #pane-analysis {
-    grid-column: span 1;
-  }
-}
-</style>
+        .code-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .code-block {
+            background: #0a0f1a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .code-block-header {
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .code-block-content {
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .diff-added {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .diff-removed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .filename-input {
+            background: #0a0f1a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .filename-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+    </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="logo">CodeInsertor • PROTOTIPO</div>
-    <div class="meta">Tres paneles con scroll independiente</div>
-    <div class="controls">
-      <div class="switch">
-        <label class="chip">Resaltados</label>
-        <input id="toggleHighlights" type="checkbox" checked />
-      </div>
-      <div class="chip history">Versiones: <span id="vcount">0</span>/5</div>
-      <button class="btn small" id="btnExportAll">Exportar</button>
+    <div class="app">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <h1>CodeInsertor</h1>
+                    <span class="version">v1.1</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Listo</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <!-- Ventana 1: Código Original -->
+            <section class="pane" id="pane-original">
+                <div class="pane-header">
+                    <h2>Código Original</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="clearOriginal()">Limpiar</button>
+                        <button class="btn btn-secondary" onclick="loadExample('original')">Ejemplo</button>
+                    </div>
+                </div>
+                <div class="pane-content">
+                    <textarea id="originalEl" placeholder="Pega tu código original aquí..."></textarea>
+                    <div class="file-info">
+                        <input type="file" id="fileInput" accept=".js,.py,.html,.css,.txt,.cs,.java,.php,.rb,.go,.rs,.ts" 
+                               onchange="handleFileUpload(event, 'original')" style="display: none;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                            Cargar Archivo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventana 2: Fragmento a Insertar -->
+            <section class="pane" id="pane-insert">
+                <div class="pane-header">
+                    <h2>Fragmento a Insertar</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="clearInsert()">Limpiar</button>
+                        <button class="btn btn-secondary" onclick="loadExample('insert')">Ejemplo</button>
+                    </div>
+                </div>
+                <div class="pane-content">
+                    <textarea id="insertEl" placeholder="Pega el fragmento que quieres insertar..."></textarea>
+                    <button class="btn" id="analyzeBtn" onclick="runLocalAnalysis()">
+                        Analizar Coincidencias
+                    </button>
+                </div>
+            </section>
+
+            <!-- Ventana 3: Análisis y Resultados -->
+            <section class="pane" id="pane-analysis">
+                <div class="pane-header">
+                    <h2>Análisis y Resultados</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="runDiagnostics()">Ejecutar Pruebas</button>
+                    </div>
+                </div>
+                <div class="pane-content">
+                    <div id="resultsContainer">
+                        <p class="placeholder-text">Los resultados del análisis aparecerán aquí...</p>
+                        <div class="suggestion-list" id="suggestionList" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="action-buttons" id="actionButtons" style="display: none;">
+                        <button class="btn btn-success" onclick="applyEdit('replace')">Reemplazar</button>
+                        <button class="btn" onclick="applyEdit('above')">Insertar Arriba</button>
+                        <button class="btn" onclick="applyEdit('below')">Insertar Debajo</button>
+                    </div>
+
+                    <div class="history-section" style="display: none;" id="historySection">
+                        <h3>Historial Reciente</h3>
+                        <div id="historyList"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p>CodeInsertor v1.1 - Análisis de código local y seguro</p>
+                </div>
+                <div class="footer-actions">
+                    <button class="btn btn-secondary" onclick="showHelp()">Ayuda</button>
+                </div>
+            </div>
+        </footer>
     </div>
-  </header>
 
-  <div class="main">
-    <!-- VENTANA 1 -->
-    <section class="card" id="pane-original">
-      <div class="card-content">
-        <div class="card-header">
-          <div class="title">Ventana 1 — Archivo original
-            <div style="margin-left:auto;display:flex;gap:8px">
-              <label class="file-label">
-                <input id="fileInput" type="file" accept=".js,.py,.html,.css,.cs,.sh,.ps1,.txt" />
-                <span class="btn small">Subir archivo</span>
-              </label>
-              <select id="langSelect" class="small">
-                <option value="">Auto</option>
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-                <option value="html">HTML</option>
-              </select>
-            </div>
-          </div>
-          <div class="toolbar">
-            <button id="btnSaveVersion" class="btn small">Guardar versión</button>
-            <button id="btnUndo" class="btn small">Deshacer</button>
-            <button id="btnRedo" class="btn small">Rehacer</button>
-            <div style="flex:1"></div>
-            <button id="btnSaveDisk" class="btn small">Guardar a disco</button>
-          </div>
-        </div>
-        
-        <div class="card-body">
-          <div class="textarea-container">
-            <textarea id="original" class="code" placeholder="// Pega o sube tu archivo aquí">// Archivo de ejemplo
-function init() {
-  console.log('Aplicación iniciada');
-  // Código existente
-  const config = {
-    version: '1.0',
-    debug: true
-  };
-  return config;
-}
+    <script>
+        // Estado de la aplicación
+        const state = {
+            language: 'auto',
+            suggestions: [],
+            chosen: null,
+            history: [],
+            undoStack: [],
+            redoStack: [],
+            maxHistory: 5,
+            originalContent: '',
+            modifiedContent: '',
+            status: 'idle'
+        };
 
-function processData(data) {
-  if (!data) return null;
-  
-  // Procesamiento de datos
-  const result = data.map(item => {
-    return {
-      ...item,
-      processed: true,
-      timestamp: Date.now()
-    };
-  });
-  
-  return result;
-}
+        // Elementos DOM
+        const originalEl = document.getElementById('originalEl');
+        const insertEl = document.getElementById('insertEl');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const suggestionList = document.getElementById('suggestionList');
+        const actionButtons = document.getElementById('actionButtons');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const historySection = document.getElementById('historySection');
+        const historyList = document.getElementById('historyList');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
 
-function cleanup() {
-  console.log('Limpiando recursos...');
-  // Limpieza
-}</textarea>
-          </div>
-        </div>
-      </div>
-    </section>
+        // Sistema de notificaciones
+        class NotificationSystem {
+            static show(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <span class="icon">${this.getIcon(type)}</span>
+                    <span class="message">${message}</span>
+                    <button class="close" onclick="this.parentElement.remove()">×</button>
+                `;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
 
-    <!-- VENTANA 2 -->
-    <section class="card" id="pane-insert">
-      <div class="card-content">
-        <div class="card-header">
-          <div class="title">Ventana 2 — Insert / Patch</div>
-          <div class="toolbar">
-            <button id="btnAnalyze" class="primary small">Analizar (Local)</button>
-            <button id="btnAI" class="small">Buscar con IA</button>
-            <div style="flex:1"></div>
-            <button class="btn small" id="btnPaste">Pegar desde portapapeles</button>
-          </div>
-        </div>
-        
-        <div class="card-body">
-          <div class="textarea-container">
-            <textarea id="insert" class="code" placeholder="// Pega aquí el fragmento que querés insertar">// Nuevo código a insertar
-console.log('Procesando datos...');
+            static getIcon(type) {
+                const icons = {
+                    success: '✅',
+                    error: '❌',
+                    warning: '⚠️',
+                    info: 'ℹ️'
+                };
+                return icons[type] || icons.info;
+            }
+        }
 
-// Validación mejorada
-if (!data || data.length === 0) {
-  console.warn('Datos vacíos recibidos');
-  return [];
-}</textarea>
-          </div>
-        </div>
-      </div>
-    </section>
+        // Sistema de historial robusto
+        class RobustHistoryManager {
+            static pushHistory(note = 'manual') {
+                const entry = {
+                    timestamp: new Date().toISOString(),
+                    note,
+                    content: originalEl.value,
+                    diffLines: this.computeDiff(state.originalContent, originalEl.value)
+                };
 
-    <!-- VENTANA 3 - CON SCROLL PROPIO Y ACCIONES FIJAS -->
-    <section class="card" id="pane-analysis">
-      <div class="card-content">
-        <div class="card-header">
-          <div class="title">Ventana 3 — Resultados & Acciones</div>
-        </div>
-        
-        <div class="card-body">
-          <!-- CONTENIDO CON SCROLL -->
-          <div class="scrollable-content">
-            <div class="match-info" id="matchInfo">Ejecuta análisis para ver resultados.</div>
+                // Gestión de límite
+                if (state.history.length >= state.maxHistory) {
+                    state.history.shift();
+                }
 
-            <div id="actionsArea">
-              <div class="row">
-                <div class="chip">Acción sugerida: <strong id="suggestedAction">-</strong></div>
-                <div style="flex:1"></div>
-                <div class="chip">Puntaje: <strong id="score">-</strong></div>
-              </div>
+                state.history.push(entry);
+                this.persist();
+                this.updateDisplay();
+            }
 
-              <div class="alt-list" id="altList"></div>
+            static computeDiff(original, modified) {
+                // Implementación simplificada de diff
+                const originalLines = original.split('\n');
+                const modifiedLines = modified.split('\n');
+                const diff = [];
 
-              <!-- PANEL DE DIAGNÓSTICO DETALLADO -->
-              <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.3); border-radius:8px;">
-                <div class="meta" style="margin-bottom:8px;"><strong>DIAGNÓSTICO DETALLADO:</strong></div>
-                <div id="detailedDiagnostics">
-                  <div class="diagnostic-item">Ejecuta pruebas para verificar el sistema...</div>
+                for (let i = 0; i < Math.max(originalLines.length, modifiedLines.length); i++) {
+                    if (originalLines[i] !== modifiedLines[i]) {
+                        diff.push({
+                            line: i + 1,
+                            original: originalLines[i] || '',
+                            modified: modifiedLines[i] || ''
+                        });
+                    }
+                }
+
+                return diff;
+            }
+
+            static persist() {
+                try {
+                    if (!this.isLocalStorageAvailable()) {
+                        throw new Error('localStorage no disponible');
+                    }
+
+                    const storageItem = {
+                        data: state.history,
+                        timestamp: Date.now(),
+                        version: '1.1'
+                    };
+
+                    localStorage.setItem('codeinsertor_history', JSON.stringify(storageItem));
+                    console.log('Historial persistido correctamente');
+                } catch (error) {
+                    console.warn('Error persistiendo historial:', error);
+                    this.useFallbackStorage();
+                }
+            }
+
+            static isLocalStorageAvailable() {
+                try {
+                    const test = 'test';
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            static useFallbackStorage() {
+                // Fallback a sessionStorage o variable en memoria
+                try {
+                    sessionStorage.setItem('codeinsertor_history_fallback', JSON.stringify(state.history));
+                    console.log('Usando sessionStorage como fallback');
+                } catch (error) {
+                    console.log('Usando almacenamiento en memoria');
+                    // En memoria ya está gestionado por el estado
+                }
+            }
+
+            static updateDisplay() {
+                if (state.history.length === 0) {
+                    historySection.style.display = 'none';
+                    return;
+                }
+
+                historySection.style.display = 'block';
+                historyList.innerHTML = state.history
+                    .slice(-3)
+                    .reverse()
+                    .map(entry => `
+                        <div class="history-entry">
+                            <div class="history-time">${new Date(entry.timestamp).toLocaleTimeString()}</div>
+                            <div class="history-note">${entry.note}</div>
+                        </div>
+                    `).join('');
+            }
+        }
+
+        // Analizador local mejorado
+        class LocalAnalyzer {
+            static analyzeLocal(originalText, insertText) {
+                if (!insertText.trim()) {
+                    throw new Error('El fragmento a insertar está vacío');
+                }
+
+                const tokensOriginal = this.tokenize(originalText);
+                const tokensInsert = this.tokenize(insertText);
+
+                return this.slidingWindowAnalysis(tokensOriginal, tokensInsert, originalText);
+            }
+
+            static tokenize(text) {
+                return text.toLowerCase()
+                    .split(/[^a-z0-9_]+/)
+                    .filter(Boolean);
+            }
+
+            static slidingWindowAnalysis(tokensOriginal, tokensInsert, originalText) {
+                const results = [];
+                const insertSet = new Set(tokensInsert);
+                const windowSize = Math.max(tokensInsert.length, 10);
+                
+                for (let i = 0; i <= tokensOriginal.length - windowSize; i++) {
+                    const windowTokens = tokensOriginal.slice(i, i + windowSize);
+                    const windowSet = new Set(windowTokens);
+                    
+                    const similarity = this.jaccardSimilarity(insertSet, windowSet);
+                    
+                    if (similarity > 0.3) { // Umbral de similitud
+                        const startLine = this.findLineNumber(originalText, i);
+                        const endLine = this.findLineNumber(originalText, i + windowSize);
+                        
+                        results.push({
+                            startLine,
+                            endLine,
+                            score: similarity,
+                            excerpt: this.getExcerpt(originalText, startLine, endLine)
+                        });
+                    }
+                }
+
+                return results.sort((a, b) => b.score - a.score).slice(0, 5);
+            }
+
+            static jaccardSimilarity(setA, setB) {
+                const intersection = new Set([...setA].filter(x => setB.has(x)));
+                const union = new Set([...setA, ...setB]);
+                return intersection.size / union.size;
+            }
+
+            static findLineNumber(text, tokenIndex) {
+                const lines = text.split('\n');
+                let currentLength = 0;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const lineTokens = this.tokenize(lines[i]);
+                    if (tokenIndex < lineTokens.length) {
+                        return i + 1;
+                    }
+                    tokenIndex -= lineTokens.length;
+                }
+                
+                return lines.length;
+            }
+
+            static getExcerpt(text, startLine, endLine) {
+                const lines = text.split('\n');
+                return lines.slice(Math.max(0, startLine - 2), endLine + 1).join('\n');
+            }
+        }
+
+        // Sistema de diagnóstico mejorado (NO BORRA CONTENIDO)
+        class DiagnosticSystem {
+            static runTests() {
+                const tests = [
+                    this.testTextareas(),
+                    this.testAnalysis(),
+                    this.testHistory(),
+                    this.testExport()
+                ];
+
+                let allPassed = true;
+                const results = [];
+
+                tests.forEach(test => {
+                    try {
+                        const result = test();
+                        results.push(`✅ ${result}`);
+                    } catch (error) {
+                        allPassed = false;
+                        results.push(`❌ ${error.message}`);
+                    }
+                });
+
+                const message = allPassed 
+                    ? 'Todas las pruebas pasaron correctamente'
+                    : 'Algunas pruebas fallaron';
+
+                NotificationSystem.show(`${message}\n${results.join('\n')}`, 
+                    allPassed ? 'success' : 'warning');
+                
+                return allPassed;
+            }
+
+            static testTextareas() {
+                // BACKUP del contenido original
+                const originalBackup = originalEl.value;
+                const insertBackup = insertEl.value;
+
+                try {
+                    // Test temporal sin afectar contenido real
+                    originalEl.value = '// Test de funcionalidad - código temporal';
+                    insertEl.value = '// Test de funcionalidad - fragmento temporal';
+                    
+                    // Validar que los textareas funcionan
+                    if (originalEl.value !== '// Test de funcionalidad - código temporal' ||
+                        insertEl.value !== '// Test de funcionalidad - fragmento temporal') {
+                        throw new Error('Los textareas no están funcionando correctamente');
+                    }
+
+                    // RESTAURAR CONTENIDO ORIGINAL
+                    originalEl.value = originalBackup;
+                    insertEl.value = insertBackup;
+
+                    return 'Textareas funcionando correctamente';
+                } catch (error) {
+                    // Restaurar incluso en caso de error
+                    originalEl.value = originalBackup;
+                    insertEl.value = insertBackup;
+                    throw error;
+                }
+            }
+
+            static testAnalysis() {
+                const testOriginal = 'function hello() {\n  return "world";\n}';
+                const testInsert = 'return "world"';
+
+                try {
+                    const results = LocalAnalyzer.analyzeLocal(testOriginal, testInsert);
+                    if (!Array.isArray(results)) {
+                        throw new Error('El análisis no devolvió un array');
+                    }
+                    return 'Sistema de análisis funcionando';
+                } catch (error) {
+                    throw new Error(`Análisis falló: ${error.message}`);
+                }
+            }
+
+            static testHistory() {
+                try {
+                    RobustHistoryManager.pushHistory('test');
+                    if (state.history.length === 0) {
+                        throw new Error('El historial no se está guardando');
+                    }
+                    return 'Sistema de historial funcionando';
+                } catch (error) {
+                    throw new Error(`Historial falló: ${error.message}`);
+                }
+            }
+
+            static testExport() {
+                const testContent = 'test content';
+                const filename = generateSmartFilename('test.js');
+                
+                if (!filename.includes('test') || !filename.includes('.js')) {
+                    throw new Error('La generación de nombres de archivo falló');
+                }
+                
+                return 'Sistema de exportación funcionando';
+            }
+        }
+
+        // Funciones principales
+        function runLocalAnalysis() {
+            setStatus('analyzing', 'Analizando código...');
+
+            try {
+                const results = LocalAnalyzer.analyzeLocal(originalEl.value, insertEl.value);
+                state.suggestions = results;
+                state.originalContent = originalEl.value;
+
+                displayResults(results);
+                setStatus('success', 'Análisis completado');
+
+                NotificationSystem.show(`Encontradas ${results.length} coincidencias`, 'success');
+            } catch (error) {
+                setStatus('error', 'Error en análisis');
+                NotificationSystem.show(`Error: ${error.message}`, 'error');
+                console.error('Error en análisis:', error);
+            }
+        }
+
+        function displayResults(results) {
+            const placeholder = resultsContainer.querySelector('.placeholder-text');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            if (results.length === 0) {
+                suggestionList.innerHTML = '<p>No se encontraron coincidencias significativas</p>';
+                suggestionList.style.display = 'block';
+                actionButtons.style.display = 'none';
+                return;
+            }
+
+            suggestionList.innerHTML = results.map((result, index) => `
+                <div class="suggestion-item ${index === 0 ? 'selected' : ''}" 
+                     onclick="selectSuggestion(${index})">
+                    <span class="suggestion-score">${Math.round(result.score * 100)}% coincidencia</span>
+                    <div class="suggestion-excerpt">Líneas ${result.startLine}-${result.endLine}:\n${result.excerpt}</div>
                 </div>
-              </div>
+            `).join('');
 
-              <!-- CONFIGURACIÓN IA -->
-              <div style="margin-top:15px">
-                <label class="meta">IA / Configuración</label>
-                <div style="display:flex;gap:8px;margin-top:6px">
-                  <input id="apiKey" placeholder="API key (opcional)" style="flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#071224;color:var(--muted)"/>
-                  <input id="proxyEndpoint" placeholder="Endpoint proxy" style="flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#071224;color:var(--muted)"/>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- ACCIONES SIEMPRE VISIBLES -->
-          <div class="actions-container">
-            <div class="actions">
-              <button id="btnReplace" class="btn primary">Reemplazar</button>
-              <button id="btnInsertAbove" class="btn">Insertar arriba</button>
-              <button id="btnInsertBelow" class="btn">Insertar abajo</button>
-              <button id="btnShowAlts" class="btn">Alternativas</button>
-              <button id="btnRunTests" class="btn test-button">Ejecutar Pruebas</button>
-            </div>
+            suggestionList.style.display = 'block';
+            actionButtons.style.display = 'flex';
+            state.chosen = results[0];
+        }
+
+        function selectSuggestion(index) {
+            // Remover selección anterior
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Seleccionar nuevo item
+            document.querySelectorAll('.suggestion-item')[index].classList.add('selected');
+            state.chosen = state.suggestions[index];
+        }
+
+        function applyEdit(mode) {
+            if (!state.chosen) {
+                NotificationSystem.show('Por favor selecciona una sugerencia primero', 'warning');
+                return;
+            }
+
+            const modifiedCode = applyCodeChanges(mode);
+            showExportDialog(modifiedCode);
+        }
+
+        function applyCodeChanges(mode) {
+            const lines = originalEl.value.split('\n');
+            const insertContent = insertEl.value;
+            const startIndex = state.chosen.startLine - 1;
             
-            <div class="row">
-              <div style="flex:1"></div>
-              <button id="btnClearCache" class="btn small">Limpiar cache</button>
-              <button id="btnHelp" class="btn small">Ayuda</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+            let modifiedLines;
 
-  <footer>
-    <div class="meta" id="appStatus">Estado: Listo | Use Analizar para encontrar coincidencias</div>
-    <div>
-      <span class="meta">CodeInsertor v1.0 | Scroll independiente por ventana</span>
-    </div>
-  </footer>
-</div>
+            switch (mode) {
+                case 'replace':
+                    modifiedLines = [
+                        ...lines.slice(0, startIndex),
+                        insertContent,
+                        ...lines.slice(state.chosen.endLine)
+                    ];
+                    break;
+                case 'above':
+                    modifiedLines = [
+                        ...lines.slice(0, startIndex),
+                        insertContent,
+                        ...lines.slice(startIndex)
+                    ];
+                    break;
+                case 'below':
+                    modifiedLines = [
+                        ...lines.slice(0, state.chosen.endLine),
+                        insertContent,
+                        ...lines.slice(state.chosen.endLine)
+                    ];
+                    break;
+                default:
+                    modifiedLines = lines;
+            }
 
-<script>
-// =============================================
-// SISTEMA DE DIAGNÓSTICO
-// =============================================
+            return modifiedLines.join('\n');
+        }
 
-class DiagnosticSystem {
-  constructor() {
-    this.tests = [];
-    this.results = [];
-  }
+        function showExportDialog(modifiedCode) {
+            state.modifiedContent = modifiedCode;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Confirmar Cambios</h3>
+                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="modal-content">
+                        <p>Revisa los cambios antes de descargar:</p>
+                        
+                        <div class="code-comparison">
+                            <div class="code-block">
+                                <div class="code-block-header">Original</div>
+                                <div class="code-block-content">${highlightChanges(state.originalContent, 'original')}</div>
+                            </div>
+                            <div class="code-block">
+                                <div class="code-block-header">Modificado</div>
+                                <div class="code-block-content">${highlightChanges(modifiedCode, 'modified')}</div>
+                            </div>
+                        </div>
 
-  addTest(name, testFn) {
-    this.tests.push({ name, testFn });
-  }
+                        <div class="export-options">
+                            <label>
+                                Nombre de archivo:
+                                <input type="text" class="filename-input" id="exportFilename" 
+                                       value="${generateSmartFilename()}" onchange="validateFilename(this)">
+                            </label>
+                            <div class="action-buttons">
+                                <button class="btn btn-success" onclick="confirmExport()">Descargar</button>
+                                <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-  async runAllTests() {
-    this.results = [];
-    const diagnosticsElement = document.getElementById('detailedDiagnostics');
-    diagnosticsElement.innerHTML = '<div class="diagnostic-item">Ejecutando pruebas...</div>';
+            document.body.appendChild(modal);
+        }
 
-    for (const test of this.tests) {
-      try {
-        const result = await test.testFn();
-        this.results.push({
-          name: test.name,
-          success: true,
-          message: result
+        function highlightChanges(content, type) {
+            // Implementación simplificada de resaltado
+            return content
+                .split('\n')
+                .map(line => {
+                    if (type === 'modified' && !state.originalContent.includes(line)) {
+                        return `<span class="diff-added">${line}</span>`;
+                    }
+                    return line;
+                })
+                .join('\n');
+        }
+
+        function generateSmartFilename(originalName = 'codigo') {
+            const baseName = originalName.replace(/\.[^/.]+$/, "");
+            const extension = originalName.includes('.') 
+                ? originalName.split('.').pop() 
+                : 'txt';
+            
+            const timestamp = new Date().toISOString()
+                .replace(/[:.]/g, '-')
+                .slice(0, -5);
+            
+            return `${baseName}-modificado-${timestamp}.${extension}`;
+        }
+
+        function validateFilename(input) {
+            // Validación básica de nombre de archivo
+            const invalidChars = /[<>:"/\\|?*]/g;
+            if (invalidChars.test(input.value)) {
+                input.style.borderColor = 'var(--error)';
+                NotificationSystem.show('El nombre de archivo contiene caracteres inválidos', 'error');
+            } else {
+                input.style.borderColor = 'var(--border)';
+            }
+        }
+
+        function confirmExport() {
+            const filenameInput = document.getElementById('exportFilename');
+            const filename = filenameInput.value || generateSmartFilename();
+            
+            downloadText(state.modifiedContent, filename);
+            RobustHistoryManager.pushHistory('exportación');
+            
+            // Cerrar modal
+            document.querySelector('.modal-overlay').remove();
+            
+            NotificationSystem.show(`Archivo ${filename} descargado correctamente`, 'success');
+        }
+
+        function downloadText(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Funciones de utilidad
+        function setStatus(status, message) {
+            state.status = status;
+            statusText.textContent = message;
+            statusDot.className = 'status-dot ' + status;
+        }
+
+        function clearOriginal() {
+            originalEl.value = '';
+            NotificationSystem.show('Ventana original limpiada', 'info');
+        }
+
+        function clearInsert() {
+            insertEl.value = '';
+            NotificationSystem.show('Ventana de inserción limpiada', 'info');
+        }
+
+        function loadExample(type) {
+            const examples = {
+                original: `function calcularSuma(a, b) {
+    // Esta función calcula la suma de dos números
+    return a + b;
+}
+
+function procesarDatos(datos) {
+    let resultado = [];
+    for (let i = 0; i < datos.length; i++) {
+        if (datos[i] > 10) {
+            resultado.push(datos[i] * 2);
+        }
+    }
+    return resultado;
+}`,
+                insert: `// Nueva función mejorada con validación
+function calcularSumaSegura(a, b) {
+    if (typeof a !== 'number' || typeof b !== 'number') {
+        throw new Error('Los parámetros deben ser números');
+    }
+    return a + b;
+}`
+            };
+
+            if (type === 'original') {
+                originalEl.value = examples.original;
+            } else {
+                insertEl.value = examples.insert;
+            }
+
+            NotificationSystem.show('Ejemplo cargado', 'success');
+        }
+
+        function handleFileUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (type === 'original') {
+                    originalEl.value = e.target.result;
+                    state.originalContent = e.target.result;
+                } else {
+                    insertEl.value = e.target.result;
+                }
+                NotificationSystem.show(`Archivo ${file.name} cargado`, 'success');
+            };
+            reader.readAsText(file);
+        }
+
+        function runDiagnostics() {
+            setStatus('testing', 'Ejecutando pruebas...');
+            setTimeout(() => {
+                DiagnosticSystem.runTests();
+                setStatus('success', 'Pruebas completadas');
+            }, 1000);
+        }
+
+        function showHelp() {
+            NotificationSystem.show(
+                `CodeInsertor v1.1 - Cómo usar:
+1. Pega tu código en la ventana izquierda
+2. Pega el fragmento a insertar en la ventana central
+3. Haz clic en "Analizar Coincidencias"
+4. Selecciona la mejor coincidencia
+5. Elige la acción (Reemplazar/Insertar Arriba/Insertar Debajo)
+6. Revisa y confirma los cambios
+7. Descarga el archivo modificado`,
+                'info'
+            );
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setStatus('success', 'Listo para usar');
+            RobustHistoryManager.updateDisplay();
+            
+            // Cargar historial si existe
+            try {
+                const stored = localStorage.getItem('codeinsertor_history');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data.data && Array.isArray(data.data)) {
+                        state.history = data.data.slice(-state.maxHistory);
+                        RobustHistoryManager.updateDisplay();
+                    }
+                }
+            } catch (error) {
+                console.log('No se pudo cargar historial previo:', error);
+            }
+
+            NotificationSystem.show('CodeInsertor v1.1 cargado correctamente', 'success');
         });
-        this.updateDiagnosticsDisplay();
-      } catch (error) {
-        this.results.push({
-          name: test.name,
-          success: false,
-          message: error.message
-        });
-        this.updateDiagnosticsDisplay();
-      }
-    }
-    
-    return this.results;
-  }
-
-  updateDiagnosticsDisplay() {
-    const diagnosticsElement = document.getElementById('detailedDiagnostics');
-    let html = '';
-    
-    this.results.forEach(result => {
-      const statusClass = result.success ? 'status-ok' : 'status-error';
-      const icon = result.success ? '✅' : '❌';
-      html += `<div class="diagnostic-item ${statusClass}">${icon} ${result.name}: ${result.message}</div>`;
-    });
-    
-    diagnosticsElement.innerHTML = html;
-    
-    const totalTests = this.tests.length;
-    const passedTests = this.results.filter(r => r.success).length;
-    document.getElementById('appStatus').textContent = 
-      `Estado: ${passedTests}/${totalTests} pruebas exitosas | ${new Date().toLocaleTimeString()}`;
-  }
-}
-
-// =============================================
-// INICIALIZACIÓN
-// =============================================
-
-const diagnosticSystem = new DiagnosticSystem();
-const originalEl = document.getElementById('original');
-const insertEl = document.getElementById('insert');
-const btnAnalyze = document.getElementById('btnAnalyze');
-const matchInfo = document.getElementById('matchInfo');
-const suggestedAction = document.getElementById('suggestedAction');
-const scoreEl = document.getElementById('score');
-const btnReplace = document.getElementById('btnReplace');
-const vcount = document.getElementById('vcount');
-const btnSaveVersion = document.getElementById('btnSaveVersion');
-
-let state = {
-  language: '',
-  suggestions: [],
-  chosen: null,
-  history: [],
-  historyIndex: -1,
-  maxHistory: 5,
-  undoStack: [],
-  redoStack: []
-};
-
-// =============================================
-// CONFIGURAR PRUEBAS
-// =============================================
-
-diagnosticSystem.addTest('Elementos DOM cargados', () => {
-  const requiredElements = ['original', 'insert', 'btnAnalyze', 'matchInfo', 'btnReplace'];
-  const missingElements = requiredElements.filter(id => !document.getElementById(id));
-  
-  if (missingElements.length > 0) {
-    throw new Error(`Faltan elementos: ${missingElements.join(', ')}`);
-  }
-  
-  return 'Todos los elementos DOM están presentes';
-});
-
-diagnosticSystem.addTest('Textareas funcionales', () => {
-  const original = document.getElementById('original');
-  const insert = document.getElementById('insert');
-  
-  if (!original || !insert) {
-    throw new Error('Textareas no encontrados');
-  }
-  
-  original.value = '// Test de escritura';
-  insert.value = '// Test de escritura';
-  
-  if (original.value !== '// Test de escritura' || insert.value !== '// Test de escritura') {
-    throw new Error('Los textareas no aceptan escritura');
-  }
-  
-  return 'Textareas funcionando correctamente';
-});
-
-diagnosticSystem.addTest('Sistema de análisis local', () => {
-  const originalText = `function test() {
-  console.log("línea 1");
-  console.log("línea 2");
-  return true;
-}`;
-
-  const insertText = `console.log("línea 1");`;
-  
-  const results = analyzeLocal(originalText, insertText);
-  
-  if (!Array.isArray(results)) {
-    throw new Error('El análisis no devuelve un array');
-  }
-  
-  return `Análisis local funcionando: ${results.length} coincidencias encontradas`;
-});
-
-diagnosticSystem.addTest('Sistema de historial', () => {
-  const initialHistory = state.history.length;
-  pushHistory('test-diagnostic');
-  
-  if (state.history.length !== initialHistory + 1) {
-    throw new Error('El sistema de historial no está guardando entradas');
-  }
-  
-  return 'Sistema de historial funcionando correctamente';
-});
-
-// =============================================
-// FUNCIONES PRINCIPALES
-// =============================================
-
-function analyzeLocal(originalText, insertText) {
-  const origLines = originalText.split(/\r?\n/);
-  const insLines = insertText.trim().split(/\r?\n/).filter(l => l.trim() !== '');
-  
-  if (insLines.length === 0) return [];
-  
-  const results = [];
-  const windowSize = Math.max(1, insLines.length);
-  
-  for (let i = 0; i <= origLines.length - windowSize; i++) {
-    const windowLines = origLines.slice(i, i + windowSize);
-    const score = Math.random() * 0.8 + 0.2;
-    
-    results.push({
-      startLine: i + 1,
-      endLine: i + windowSize,
-      score: score,
-      excerpt: windowLines.join('\n')
-    });
-  }
-  
-  results.sort((a, b) => b.score - a.score);
-  return results.slice(0, 5);
-}
-
-function runLocalAnalysis() {
-  const orig = originalEl.value;
-  const ins = insertEl.value;
-  
-  if (!ins.trim()) {
-    alert('La ventana 2 está vacía. Pegá el fragmento primero.');
-    return;
-  }
-  
-  const res = analyzeLocal(orig, ins);
-  state.suggestions = res;
-  
-  if (res.length === 0) {
-    matchInfo.textContent = 'No se encontraron coincidencias relevantes (local).';
-    suggestedAction.textContent = '-';
-    scoreEl.textContent = '-';
-    return;
-  }
-  
-  const best = res[0];
-  state.chosen = best;
-  
-  suggestedAction.textContent = 'Reemplazar (sugerido)';
-  scoreEl.textContent = (best.score * 100).toFixed(1) + '%';
-  matchInfo.innerHTML = `<strong>Coincidencia más probable:</strong> líneas ${best.startLine}–${best.endLine} — puntaje ${(best.score * 100).toFixed(1)}%<pre style="white-space:pre-wrap;margin-top:8px;padding:8px;border-radius:6px;background:#021123;color:var(--muted);">${escapeHtml(best.excerpt)}</pre>`;
-}
-
-function applyEdit(mode) {
-  if (!state.chosen) {
-    alert('No hay sugerencia seleccionada. Ejecutá "Analizar" primero.');
-    return;
-  }
-  
-  const orig = originalEl.value.split(/\r?\n/);
-  const ins = insertEl.value.split(/\r?\n/);
-  const s = state.chosen.startLine - 1;
-  const e = state.chosen.endLine - 1;
-  
-  let newArr;
-  if (mode === 'replace') {
-    newArr = [...orig.slice(0, s), ...ins, ...orig.slice(e + 1)];
-  } else if (mode === 'above') {
-    newArr = [...orig.slice(0, s), ...ins, ...orig.slice(s)];
-  } else {
-    newArr = [...orig.slice(0, e + 1), ...ins, ...orig.slice(e + 1)];
-  }
-  
-  originalEl.value = newArr.join('\n');
-  pushHistory(`Applied ${mode} at ${s + 1}-${e + 1}`);
-  alert('Edición aplicada correctamente.');
-}
-
-function pushHistory(note = 'manual') {
-  const content = originalEl.value;
-  const timestamp = new Date().toISOString();
-  state.history.push({ timestamp, note, content });
-  
-  if (state.history.length > state.maxHistory) {
-    state.history.shift();
-  }
-  
-  updateVCount();
-  persistHistory();
-}
-
-function updateVCount() {
-  if (vcount) {
-    vcount.textContent = state.history.length;
-  }
-}
-
-function persistHistory() {
-  try {
-    localStorage.setItem('codeinsertor_history', JSON.stringify(state.history));
-  } catch (e) {
-    console.error('Error guardando historial:', e);
-  }
-}
-
-function loadHistory() {
-  try {
-    const h = JSON.parse(localStorage.getItem('codeinsertor_history') || '[]');
-    if (Array.isArray(h)) {
-      state.history = h.slice(-state.maxHistory);
-    }
-  } catch (e) {
-    state.history = [];
-  }
-  updateVCount();
-}
-
-function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-// =============================================
-// EVENT LISTENERS
-// =============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Aplicación inicializada con scroll independiente');
-  
-  loadHistory();
-  
-  // Event listeners principales
-  btnAnalyze.addEventListener('click', runLocalAnalysis);
-  btnReplace.addEventListener('click', () => applyEdit('replace'));
-  document.getElementById('btnInsertAbove').addEventListener('click', () => applyEdit('above'));
-  document.getElementById('btnInsertBelow').addEventListener('click', () => applyEdit('below'));
-  document.getElementById('btnShowAlts').addEventListener('click', showAlternatives);
-  
-  btnSaveVersion.addEventListener('click', () => {
-    pushHistory('user-save');
-    alert('Versión guardada.');
-  });
-  
-  // Sistema de diagnóstico
-  document.getElementById('btnRunTests').addEventListener('click', async () => {
-    await diagnosticSystem.runAllTests();
-  });
-  
-  document.getElementById('btnClearCache').addEventListener('click', () => {
-    if (confirm('¿Limpiar cache e historial?')) {
-      localStorage.removeItem('codeinsertor_history');
-      state.history = [];
-      updateVCount();
-      alert('Cache limpiado.');
-    }
-  });
-  
-  document.getElementById('btnHelp').addEventListener('click', () => {
-    alert(`AYUDA - SCROLL INDEPENDIENTE:
-
-• Cada ventana tiene su propio scroll
-• Los botones de acción están SIEMPRE visibles
-• Ventana 1 y 2: Scroll solo en el área de código
-• Ventana 3: Scroll en el contenido, botones fijos
-
-Uso:
-1. Pegar código en Ventana 1
-2. Pegar fragmento en Ventana 2  
-3. Click en "Analizar"
-4. Usar botones de acción en Ventana 3`);
-  });
-
-  document.getElementById('btnPaste').addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      insertEl.value = text;
-    } catch (err) {
-      alert('No se pudo acceder al portapapeles. Pegar manualmente.');
-    }
-  });
-
-  // Ejecutar diagnóstico inicial
-  setTimeout(() => {
-    diagnosticSystem.runAllTests();
-  }, 500);
-});
-
-function showAlternatives() {
-  const altList = document.getElementById('altList');
-  if (!state.suggestions || state.suggestions.length <= 1) {
-    alert('No hay alternativas disponibles. Ejecuta el análisis primero.');
-    return;
-  }
-  
-  if (altList.style.display === 'block') {
-    altList.style.display = 'none';
-    return;
-  }
-  
-  let html = '';
-  state.suggestions.slice(1).forEach((alt, idx) => {
-    html += `<div class="alt-item" onclick="selectAlternative(${idx + 1})">
-      <strong>Alternativa ${idx + 1}</strong> — líneas ${alt.startLine}-${alt.endLine} — ${(alt.score * 100).toFixed(1)}%
-    </div>`;
-  });
-  
-  altList.innerHTML = html;
-  altList.style.display = 'block';
-}
-
-function selectAlternative(index) {
-  if (state.suggestions && state.suggestions[index]) {
-    state.chosen = state.suggestions[index];
-    const best = state.chosen;
-    
-    suggestedAction.textContent = 'Reemplazar (alternativa)';
-    scoreEl.textContent = (best.score * 100).toFixed(1) + '%';
-    matchInfo.innerHTML = `<strong>Alternativa seleccionada:</strong> líneas ${best.startLine}–${best.endLine} — puntaje ${(best.score * 100).toFixed(1)}%<pre style="white-space:pre-wrap;margin-top:8px;padding:8px;border-radius:6px;background:#021123;color:var(--muted);">${escapeHtml(best.excerpt)}</pre>`;
-    
-    document.getElementById('altList').style.display = 'none';
-  }
-}
-
-// Manejo de errores globales
-window.addEventListener('error', function(e) {
-  console.error('Error global:', e.error);
-});
-</script>
+    </script>
 </body>
 </html>
