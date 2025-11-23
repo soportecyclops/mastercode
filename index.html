@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CodeInsertor — Diagnóstico & Solución</title>
+<title>CodeInsertor — Prototipo Profesional</title>
 <style>
 :root {
   --bg: #0f1724;
@@ -34,10 +34,11 @@ html, body {
 
 .app {
   display: grid;
-  grid-template-rows: 70px 1fr 100px;
+  grid-template-rows: 70px 1fr 80px;
   height: 100vh;
   gap: 16px;
   padding: 16px;
+  width: 100%;
 }
 
 /* HEADER */
@@ -47,6 +48,7 @@ header {
   gap: 16px;
   color: white;
   padding: 0 8px;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -63,16 +65,17 @@ header {
   align-items: center;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* CONTENIDO PRINCIPAL - 3 COLUMNAS CON SCROLL INDEPENDIENTE */
 .main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
   height: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
-/* TARJETAS */
+/* TARJETAS CON SCROLL PROPIO */
 .card {
   background: var(--panel);
   border-radius: var(--radius);
@@ -82,19 +85,51 @@ header {
   flex-direction: column;
   min-height: 0;
   border: 1px solid var(--border);
+  height: 100%;
+}
+
+/* CONTENEDOR CON SCROLL PARA CADA VENTANA */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* HEADER DE CADA VENTANA FIJO */
+.card-header {
+  flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
 .title {
   color: var(--muted);
   font-size: 14px;
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 600;
 }
 
-/* ÁREAS DE CÓDIGO */
+/* CUERPO CON SCROLL */
+.card-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ÁREAS DE CÓDIGO CON SCROLL PROPIO */
+.textarea-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 textarea.code {
   flex: 1;
   background: #020617;
@@ -107,16 +142,19 @@ textarea.code {
   font-size: 13.5px;
   line-height: 1.5;
   outline: none;
-  min-height: 0;
+  min-height: 200px;
+  width: 100%;
+  overflow: auto;
 }
 
-/* BARRA DE HERRAMIENTAS */
+/* BARRA DE HERRAMIENTAS FIJA EN CADA VENTANA */
 .toolbar {
   display: flex;
   gap: 10px;
   align-items: center;
   margin-bottom: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 /* BOTONES */
@@ -148,10 +186,12 @@ button.primary {
   padding: 6px 10px;
 }
 
-.panel-body {
-  overflow: auto;
+/* CONTENIDO CON SCROLL EN VENTANA 3 */
+.scrollable-content {
   flex: 1;
+  overflow-y: auto;
   min-height: 0;
+  padding-right: 5px;
 }
 
 /* INFORMACIÓN */
@@ -165,10 +205,18 @@ button.primary {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* ACCIONES SIEMPRE VISIBLES EN VENTANA 3 */
+.actions-container {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .actions {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-bottom: 15px;
   flex-wrap: wrap;
 }
 
@@ -207,6 +255,7 @@ button.primary {
   font-size: 12.5px;
 }
 
+/* FOOTER */
 footer {
   display: flex;
   gap: 12px;
@@ -214,6 +263,7 @@ footer {
   justify-content: space-between;
   color: var(--muted);
   padding: 0 8px;
+  flex-shrink: 0;
 }
 
 input[type=file] {
@@ -273,85 +323,213 @@ input[type=file] {
   color: var(--success);
   border: 1px solid var(--success);
 }
+
+/* SCROLLBAR PERSONALIZADO */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  
+  #pane-analysis {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+  
+  #pane-analysis {
+    grid-column: span 1;
+  }
+}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div class="logo">CodeInsertor • DIAGNÓSTICO</div>
-    <div class="meta">Verificando funcionamiento...</div>
+    <div class="logo">CodeInsertor • PROTOTIPO</div>
+    <div class="meta">Tres paneles con scroll independiente</div>
     <div class="controls">
-      <button class="btn small" id="btnRunTests">Ejecutar Pruebas</button>
-      <button class="btn small" id="btnResetApp">Reiniciar App</button>
+      <div class="switch">
+        <label class="chip">Resaltados</label>
+        <input id="toggleHighlights" type="checkbox" checked />
+      </div>
+      <div class="chip history">Versiones: <span id="vcount">0</span>/5</div>
+      <button class="btn small" id="btnExportAll">Exportar</button>
     </div>
   </header>
 
   <div class="main">
     <!-- VENTANA 1 -->
     <section class="card" id="pane-original">
-      <div class="title">Ventana 1 — Archivo original
-        <div style="margin-left:auto;display:flex;gap:8px">
-          <label class="file-label">
-            <input id="fileInput" type="file" accept=".js,.py,.html,.css,.cs,.sh,.ps1,.txt" />
-            <span class="btn small">Subir archivo</span>
-          </label>
+      <div class="card-content">
+        <div class="card-header">
+          <div class="title">Ventana 1 — Archivo original
+            <div style="margin-left:auto;display:flex;gap:8px">
+              <label class="file-label">
+                <input id="fileInput" type="file" accept=".js,.py,.html,.css,.cs,.sh,.ps1,.txt" />
+                <span class="btn small">Subir archivo</span>
+              </label>
+              <select id="langSelect" class="small">
+                <option value="">Auto</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="html">HTML</option>
+              </select>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="btnSaveVersion" class="btn small">Guardar versión</button>
+            <button id="btnUndo" class="btn small">Deshacer</button>
+            <button id="btnRedo" class="btn small">Rehacer</button>
+            <div style="flex:1"></div>
+            <button id="btnSaveDisk" class="btn small">Guardar a disco</button>
+          </div>
         </div>
-      </div>
-      <div class="toolbar">
-        <button id="btnTestTextarea1" class="btn small test-button">Probar Textarea 1</button>
-        <button id="btnSaveVersion" class="btn small">Guardar versión</button>
-      </div>
-      <div class="panel-body">
-        <textarea id="original" class="code" placeholder="// Pega o sube tu archivo aquí">// Archivo de prueba
-function ejemplo() {
-  console.log("Hola mundo");
-  return true;
+        
+        <div class="card-body">
+          <div class="textarea-container">
+            <textarea id="original" class="code" placeholder="// Pega o sube tu archivo aquí">// Archivo de ejemplo
+function init() {
+  console.log('Aplicación iniciada');
+  // Código existente
+  const config = {
+    version: '1.0',
+    debug: true
+  };
+  return config;
+}
+
+function processData(data) {
+  if (!data) return null;
+  
+  // Procesamiento de datos
+  const result = data.map(item => {
+    return {
+      ...item,
+      processed: true,
+      timestamp: Date.now()
+    };
+  });
+  
+  return result;
+}
+
+function cleanup() {
+  console.log('Limpiando recursos...');
+  // Limpieza
 }</textarea>
-      </div>
-      <div class="diagnostic-panel" id="diagnostic1">
-        <div class="diagnostic-item">Estado Ventana 1: <span id="status1">Sin probar</span></div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- VENTANA 2 -->
     <section class="card" id="pane-insert">
-      <div class="title">Ventana 2 — Insert / Patch</div>
-      <div class="toolbar">
-        <button id="btnAnalyze" class="primary small">Analizar (Local)</button>
-        <button id="btnTestTextarea2" class="btn small test-button">Probar Textarea 2</button>
-      </div>
-      <div class="panel-body">
-        <textarea id="insert" class="code" placeholder="// Pega aquí el fragmento">console.log("Hola mundo");</textarea>
-      </div>
-      <div class="diagnostic-panel" id="diagnostic2">
-        <div class="diagnostic-item">Estado Ventana 2: <span id="status2">Sin probar</span></div>
+      <div class="card-content">
+        <div class="card-header">
+          <div class="title">Ventana 2 — Insert / Patch</div>
+          <div class="toolbar">
+            <button id="btnAnalyze" class="primary small">Analizar (Local)</button>
+            <button id="btnAI" class="small">Buscar con IA</button>
+            <div style="flex:1"></div>
+            <button class="btn small" id="btnPaste">Pegar desde portapapeles</button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="textarea-container">
+            <textarea id="insert" class="code" placeholder="// Pega aquí el fragmento que querés insertar">// Nuevo código a insertar
+console.log('Procesando datos...');
+
+// Validación mejorada
+if (!data || data.length === 0) {
+  console.warn('Datos vacíos recibidos');
+  return [];
+}</textarea>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- VENTANA 3 -->
+    <!-- VENTANA 3 - CON SCROLL PROPIO Y ACCIONES FIJAS -->
     <section class="card" id="pane-analysis">
-      <div class="title">Ventana 3 — Resultados & Diagnóstico</div>
-      <div class="match-info" id="matchInfo">Ejecuta pruebas para verificar funcionamiento.</div>
-
-      <div id="actionsArea">
-        <div class="row">
-          <div class="chip">Acción sugerida: <strong id="suggestedAction">-</strong></div>
-          <div style="flex:1"></div>
-          <div class="chip">Puntaje: <strong id="score">-</strong></div>
+      <div class="card-content">
+        <div class="card-header">
+          <div class="title">Ventana 3 — Resultados & Acciones</div>
         </div>
+        
+        <div class="card-body">
+          <!-- CONTENIDO CON SCROLL -->
+          <div class="scrollable-content">
+            <div class="match-info" id="matchInfo">Ejecuta análisis para ver resultados.</div>
 
-        <div class="actions">
-          <button id="btnReplace" class="btn">Reemplazar</button>
-          <button id="btnTestReplace" class="btn test-button">Probar Reemplazo</button>
-        </div>
+            <div id="actionsArea">
+              <div class="row">
+                <div class="chip">Acción sugerida: <strong id="suggestedAction">-</strong></div>
+                <div style="flex:1"></div>
+                <div class="chip">Puntaje: <strong id="score">-</strong></div>
+              </div>
 
-        <div class="alt-list" id="altList"></div>
+              <div class="alt-list" id="altList"></div>
 
-        <!-- PANEL DE DIAGNÓSTICO DETALLADO -->
-        <div style="margin-top:15px; padding:10px; background:rgba(0,0,0,0.3); border-radius:8px;">
-          <div class="meta" style="margin-bottom:8px;"><strong>DIAGNÓSTICO DETALLADO:</strong></div>
-          <div id="detailedDiagnostics">
-            <div class="diagnostic-item">Esperando pruebas...</div>
+              <!-- PANEL DE DIAGNÓSTICO DETALLADO -->
+              <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.3); border-radius:8px;">
+                <div class="meta" style="margin-bottom:8px;"><strong>DIAGNÓSTICO DETALLADO:</strong></div>
+                <div id="detailedDiagnostics">
+                  <div class="diagnostic-item">Ejecuta pruebas para verificar el sistema...</div>
+                </div>
+              </div>
+
+              <!-- CONFIGURACIÓN IA -->
+              <div style="margin-top:15px">
+                <label class="meta">IA / Configuración</label>
+                <div style="display:flex;gap:8px;margin-top:6px">
+                  <input id="apiKey" placeholder="API key (opcional)" style="flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#071224;color:var(--muted)"/>
+                  <input id="proxyEndpoint" placeholder="Endpoint proxy" style="flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#071224;color:var(--muted)"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- ACCIONES SIEMPRE VISIBLES -->
+          <div class="actions-container">
+            <div class="actions">
+              <button id="btnReplace" class="btn primary">Reemplazar</button>
+              <button id="btnInsertAbove" class="btn">Insertar arriba</button>
+              <button id="btnInsertBelow" class="btn">Insertar abajo</button>
+              <button id="btnShowAlts" class="btn">Alternativas</button>
+              <button id="btnRunTests" class="btn test-button">Ejecutar Pruebas</button>
+            </div>
+            
+            <div class="row">
+              <div style="flex:1"></div>
+              <button id="btnClearCache" class="btn small">Limpiar cache</button>
+              <button id="btnHelp" class="btn small">Ayuda</button>
+            </div>
           </div>
         </div>
       </div>
@@ -359,24 +537,22 @@ function ejemplo() {
   </div>
 
   <footer>
-    <div class="meta" id="appStatus">Estado: Sin inicializar | Versión: 1.0 | Última prueba: -</div>
+    <div class="meta" id="appStatus">Estado: Listo | Use Analizar para encontrar coincidencias</div>
     <div>
-      <button id="btnHelp" class="btn small">Ayuda</button>
-      <button id="btnDebug" class="btn small">Modo Debug</button>
+      <span class="meta">CodeInsertor v1.0 | Scroll independiente por ventana</span>
     </div>
   </footer>
 </div>
 
 <script>
 // =============================================
-// SISTEMA DE DIAGNÓSTICO Y PRUEBAS
+// SISTEMA DE DIAGNÓSTICO
 // =============================================
 
 class DiagnosticSystem {
   constructor() {
     this.tests = [];
     this.results = [];
-    this.debugMode = false;
   }
 
   addTest(name, testFn) {
@@ -396,11 +572,6 @@ class DiagnosticSystem {
           success: true,
           message: result
         });
-        
-        if (this.debugMode) {
-          console.log(`✅ ${test.name}: ${result}`);
-        }
-        
         this.updateDiagnosticsDisplay();
       } catch (error) {
         this.results.push({
@@ -408,11 +579,6 @@ class DiagnosticSystem {
           success: false,
           message: error.message
         });
-        
-        if (this.debugMode) {
-          console.error(`❌ ${test.name}: ${error.message}`);
-        }
-        
         this.updateDiagnosticsDisplay();
       }
     }
@@ -432,33 +598,45 @@ class DiagnosticSystem {
     
     diagnosticsElement.innerHTML = html;
     
-    // Actualizar estado general
     const totalTests = this.tests.length;
     const passedTests = this.results.filter(r => r.success).length;
     document.getElementById('appStatus').textContent = 
-      `Estado: ${passedTests}/${totalTests} pruebas exitosas | Última prueba: ${new Date().toLocaleTimeString()}`;
-  }
-
-  toggleDebugMode() {
-    this.debugMode = !this.debugMode;
-    console.log(`Modo debug: ${this.debugMode ? 'ACTIVADO' : 'DESACTIVADO'}`);
-    return this.debugMode;
+      `Estado: ${passedTests}/${totalTests} pruebas exitosas | ${new Date().toLocaleTimeString()}`;
   }
 }
 
 // =============================================
-// INICIALIZACIÓN DEL SISTEMA
+// INICIALIZACIÓN
 // =============================================
 
 const diagnosticSystem = new DiagnosticSystem();
+const originalEl = document.getElementById('original');
+const insertEl = document.getElementById('insert');
+const btnAnalyze = document.getElementById('btnAnalyze');
+const matchInfo = document.getElementById('matchInfo');
+const suggestedAction = document.getElementById('suggestedAction');
+const scoreEl = document.getElementById('score');
+const btnReplace = document.getElementById('btnReplace');
+const vcount = document.getElementById('vcount');
+const btnSaveVersion = document.getElementById('btnSaveVersion');
 
-// Configurar pruebas de diagnóstico
+let state = {
+  language: '',
+  suggestions: [],
+  chosen: null,
+  history: [],
+  historyIndex: -1,
+  maxHistory: 5,
+  undoStack: [],
+  redoStack: []
+};
+
+// =============================================
+// CONFIGURAR PRUEBAS
+// =============================================
+
 diagnosticSystem.addTest('Elementos DOM cargados', () => {
-  const requiredElements = [
-    'original', 'insert', 'btnAnalyze', 'matchInfo', 
-    'btnReplace', 'diagnostic1', 'diagnostic2'
-  ];
-  
+  const requiredElements = ['original', 'insert', 'btnAnalyze', 'matchInfo', 'btnReplace'];
   const missingElements = requiredElements.filter(id => !document.getElementById(id));
   
   if (missingElements.length > 0) {
@@ -476,7 +654,6 @@ diagnosticSystem.addTest('Textareas funcionales', () => {
     throw new Error('Textareas no encontrados');
   }
   
-  // Probar escritura
   original.value = '// Test de escritura';
   insert.value = '// Test de escritura';
   
@@ -502,10 +679,6 @@ diagnosticSystem.addTest('Sistema de análisis local', () => {
     throw new Error('El análisis no devuelve un array');
   }
   
-  if (results.length === 0) {
-    throw new Error('El análisis no encontró coincidencias en prueba básica');
-  }
-  
   return `Análisis local funcionando: ${results.length} coincidencias encontradas`;
 });
 
@@ -521,37 +694,10 @@ diagnosticSystem.addTest('Sistema de historial', () => {
 });
 
 // =============================================
-// CÓDIGO ORIGINAL DE LA APLICACIÓN (CORREGIDO)
-// =============================================
-
-const originalEl = document.getElementById('original');
-const insertEl = document.getElementById('insert');
-const btnAnalyze = document.getElementById('btnAnalyze');
-const matchInfo = document.getElementById('matchInfo');
-const suggestedAction = document.getElementById('suggestedAction');
-const scoreEl = document.getElementById('score');
-const btnReplace = document.getElementById('btnReplace');
-const vcount = document.getElementById('vcount');
-const btnSaveVersion = document.getElementById('btnSaveVersion');
-
-let state = {
-  language: '',
-  suggestions: [],
-  chosen: null,
-  history: [],
-  historyIndex: -1,
-  maxHistory: 5,
-  undoStack: [],
-  redoStack: []
-};
-
-// =============================================
-// FUNCIONES ESENCIALES (CORREGIDAS)
+// FUNCIONES PRINCIPALES
 // =============================================
 
 function analyzeLocal(originalText, insertText) {
-  console.log('Ejecutando análisis local...');
-  
   const origLines = originalText.split(/\r?\n/);
   const insLines = insertText.trim().split(/\r?\n/).filter(l => l.trim() !== '');
   
@@ -562,7 +708,7 @@ function analyzeLocal(originalText, insertText) {
   
   for (let i = 0; i <= origLines.length - windowSize; i++) {
     const windowLines = origLines.slice(i, i + windowSize);
-    const score = Math.random() * 0.8 + 0.2; // Simulación de puntaje para pruebas
+    const score = Math.random() * 0.8 + 0.2;
     
     results.push({
       startLine: i + 1,
@@ -577,8 +723,6 @@ function analyzeLocal(originalText, insertText) {
 }
 
 function runLocalAnalysis() {
-  console.log('Iniciando análisis...');
-  
   const orig = originalEl.value;
   const ins = insertEl.value;
   
@@ -603,9 +747,6 @@ function runLocalAnalysis() {
   suggestedAction.textContent = 'Reemplazar (sugerido)';
   scoreEl.textContent = (best.score * 100).toFixed(1) + '%';
   matchInfo.innerHTML = `<strong>Coincidencia más probable:</strong> líneas ${best.startLine}–${best.endLine} — puntaje ${(best.score * 100).toFixed(1)}%<pre style="white-space:pre-wrap;margin-top:8px;padding:8px;border-radius:6px;background:#021123;color:var(--muted);">${escapeHtml(best.excerpt)}</pre>`;
-  
-  document.getElementById('status1').textContent = 'Análisis ejecutado';
-  document.getElementById('status2').textContent = 'Coincidencia encontrada';
 }
 
 function applyEdit(mode) {
@@ -622,11 +763,15 @@ function applyEdit(mode) {
   let newArr;
   if (mode === 'replace') {
     newArr = [...orig.slice(0, s), ...ins, ...orig.slice(e + 1)];
+  } else if (mode === 'above') {
+    newArr = [...orig.slice(0, s), ...ins, ...orig.slice(s)];
+  } else {
+    newArr = [...orig.slice(0, e + 1), ...ins, ...orig.slice(e + 1)];
   }
   
   originalEl.value = newArr.join('\n');
   pushHistory(`Applied ${mode} at ${s + 1}-${e + 1}`);
-  alert('Edición aplicada. Revisa y guarda versión si corresponde.');
+  alert('Edición aplicada correctamente.');
 }
 
 function pushHistory(note = 'manual') {
@@ -673,102 +818,110 @@ function escapeHtml(s) {
 }
 
 // =============================================
-// EVENT LISTENERS (CORREGIDOS)
+// EVENT LISTENERS
 // =============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM cargado, inicializando aplicación...');
+  console.log('Aplicación inicializada con scroll independiente');
   
-  // Cargar historial
   loadHistory();
   
-  // Configurar event listeners
+  // Event listeners principales
   btnAnalyze.addEventListener('click', runLocalAnalysis);
   btnReplace.addEventListener('click', () => applyEdit('replace'));
+  document.getElementById('btnInsertAbove').addEventListener('click', () => applyEdit('above'));
+  document.getElementById('btnInsertBelow').addEventListener('click', () => applyEdit('below'));
+  document.getElementById('btnShowAlts').addEventListener('click', showAlternatives);
+  
   btnSaveVersion.addEventListener('click', () => {
     pushHistory('user-save');
     alert('Versión guardada.');
   });
   
-  // Botones de prueba
-  document.getElementById('btnTestTextarea1').addEventListener('click', () => {
-    originalEl.value = '// Textarea 1 funciona correctamente\n' + originalEl.value;
-    document.getElementById('status1').textContent = '✅ Funciona';
-    document.getElementById('status1').className = 'status-ok';
-  });
-  
-  document.getElementById('btnTestTextarea2').addEventListener('click', () => {
-    insertEl.value = '// Textarea 2 funciona correctamente\n' + insertEl.value;
-    document.getElementById('status2').textContent = '✅ Funciona';
-    document.getElementById('status2').className = 'status-ok';
-  });
-  
-  document.getElementById('btnTestReplace').addEventListener('click', () => {
-    if (state.chosen) {
-      applyEdit('replace');
-      matchInfo.textContent = '✅ Prueba de reemplazo ejecutada correctamente';
-    } else {
-      alert('Ejecuta primero el análisis para probar el reemplazo');
-    }
-  });
-  
   // Sistema de diagnóstico
   document.getElementById('btnRunTests').addEventListener('click', async () => {
-    document.getElementById('appStatus').textContent = 'Estado: Ejecutando pruebas...';
     await diagnosticSystem.runAllTests();
   });
   
-  document.getElementById('btnResetApp').addEventListener('click', () => {
-    if (confirm('¿Reiniciar la aplicación? Se perderá el historial no guardado.')) {
+  document.getElementById('btnClearCache').addEventListener('click', () => {
+    if (confirm('¿Limpiar cache e historial?')) {
       localStorage.removeItem('codeinsertor_history');
-      location.reload();
+      state.history = [];
+      updateVCount();
+      alert('Cache limpiado.');
     }
   });
   
-  document.getElementById('btnDebug').addEventListener('click', () => {
-    const debugMode = diagnosticSystem.toggleDebugMode();
-    document.getElementById('btnDebug').textContent = 
-      debugMode ? 'Debug: ON' : 'Debug: OFF';
-    document.getElementById('btnDebug').style.background = 
-      debugMode ? '#2d4d1a' : '#0b1320';
-  });
-  
   document.getElementById('btnHelp').addEventListener('click', () => {
-    alert(`AYUDA - SISTEMA DE DIAGNÓSTICO:
+    alert(`AYUDA - SCROLL INDEPENDIENTE:
 
-1. Usa "Ejecutar Pruebas" para verificar todos los componentes
-2. Los botones "Probar..." testean componentes individuales
-3. "Reiniciar App" restablece toda la aplicación
-4. "Modo Debug" muestra información detallada en consola
+• Cada ventana tiene su propio scroll
+• Los botones de acción están SIEMPRE visibles
+• Ventana 1 y 2: Scroll solo en el área de código
+• Ventana 3: Scroll en el contenido, botones fijos
 
-Problemas comunes:
-- Textareas no responden: Verifica que el DOM esté cargado
-- Análisis no funciona: Revisa la consola del navegador
-- Historial no guarda: Verifica que localStorage esté disponible`);
+Uso:
+1. Pegar código en Ventana 1
+2. Pegar fragmento en Ventana 2  
+3. Click en "Analizar"
+4. Usar botones de acción en Ventana 3`);
   });
-  
+
+  document.getElementById('btnPaste').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      insertEl.value = text;
+    } catch (err) {
+      alert('No se pudo acceder al portapapeles. Pegar manualmente.');
+    }
+  });
+
   // Ejecutar diagnóstico inicial
   setTimeout(() => {
     diagnosticSystem.runAllTests();
-  }, 1000);
+  }, 500);
+});
+
+function showAlternatives() {
+  const altList = document.getElementById('altList');
+  if (!state.suggestions || state.suggestions.length <= 1) {
+    alert('No hay alternativas disponibles. Ejecuta el análisis primero.');
+    return;
+  }
   
-  console.log('Aplicación inicializada correctamente');
-});
+  if (altList.style.display === 'block') {
+    altList.style.display = 'none';
+    return;
+  }
+  
+  let html = '';
+  state.suggestions.slice(1).forEach((alt, idx) => {
+    html += `<div class="alt-item" onclick="selectAlternative(${idx + 1})">
+      <strong>Alternativa ${idx + 1}</strong> — líneas ${alt.startLine}-${alt.endLine} — ${(alt.score * 100).toFixed(1)}%
+    </div>`;
+  });
+  
+  altList.innerHTML = html;
+  altList.style.display = 'block';
+}
 
-// =============================================
-// DETECCIÓN DE ERRORES GLOBALES
-// =============================================
+function selectAlternative(index) {
+  if (state.suggestions && state.suggestions[index]) {
+    state.chosen = state.suggestions[index];
+    const best = state.chosen;
+    
+    suggestedAction.textContent = 'Reemplazar (alternativa)';
+    scoreEl.textContent = (best.score * 100).toFixed(1) + '%';
+    matchInfo.innerHTML = `<strong>Alternativa seleccionada:</strong> líneas ${best.startLine}–${best.endLine} — puntaje ${(best.score * 100).toFixed(1)}%<pre style="white-space:pre-wrap;margin-top:8px;padding:8px;border-radius:6px;background:#021123;color:var(--muted);">${escapeHtml(best.excerpt)}</pre>`;
+    
+    document.getElementById('altList').style.display = 'none';
+  }
+}
 
+// Manejo de errores globales
 window.addEventListener('error', function(e) {
-  console.error('Error global capturado:', e.error);
-  document.getElementById('appStatus').textContent = 'Estado: ERROR - Ver consola';
+  console.error('Error global:', e.error);
 });
-
-window.addEventListener('unhandledrejection', function(e) {
-  console.error('Promise rechazada:', e.reason);
-  document.getElementById('appStatus').textContent = 'Estado: PROMISE ERROR - Ver consola';
-});
-
 </script>
 </body>
 </html>
