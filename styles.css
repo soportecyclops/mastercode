@@ -1,0 +1,249 @@
+/* ============================
+   VARIABLES DE COLOR Y THEME
+   ============================ */
+:root {
+    --bg-gradient: linear-gradient(135deg, #1e1f29 0%, #31344b 100%);
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+    --accent: #7f9cff;
+    --accent-hover: #a6b6ff;
+    --error: #ff6f6f;
+    --success: #7effc4;
+    --text-light: #e4e7f1;
+    --text-dim: #878ca6;
+    --radius: 14px;
+    --blur: 14px;
+    --transition: 0.25s ease;
+}
+
+/* ============================
+   GENERAL
+   ============================ */
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-gradient);
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    color: var(--text-light);
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* ============================
+   LAYOUT PRINCIPAL
+   ============================ */
+.app-container {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr 1fr;
+    gap: 18px;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ============================
+   PANEL GLASS
+   ============================ */
+.panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(var(--blur));
+    border-radius: var(--radius);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.panel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.45);
+}
+
+/* ============================
+   TÍTULOS DE PANEL
+   ============================ */
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.panel-header i {
+    font-size: 22px;
+    color: var(--accent);
+}
+
+.panel-header h2 {
+    font-size: 20px;
+}
+
+/* ============================
+   ÁREAS DE TEXTO
+   ============================ */
+textarea {
+    flex: 1;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    resize: none;
+    color: var(--text-light);
+    font-size: 14px;
+    font-family: Consolas, monospace;
+    outline: none;
+    transition: border var(--transition), background var(--transition);
+}
+
+textarea:focus {
+    border: 1px solid var(--accent);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================
+   BOTONES
+   ============================ */
+button {
+    background: var(--accent);
+    color: #111;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background var(--transition), transform var(--transition);
+}
+
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Botón secundario */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-light);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================
+   MENÚES Y SELECTS
+   ============================ */
+select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--panel-border);
+    color: var(--text-light);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    transition: border var(--transition), background var(--transition);
+    outline: none;
+}
+
+select:hover,
+select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--accent);
+}
+
+/* ============================
+   AYUDAS VISUALES (HIGHLIGHTS)
+   ============================ */
+.highlight {
+    background: rgba(127, 156, 255, 0.22);
+    border-left: 4px solid var(--accent);
+    padding-left: 8px;
+    transition: background var(--transition);
+}
+
+.highlight-alt {
+    background: rgba(255, 255, 255, 0.15);
+    border-left: 4px solid var(--text-dim);
+}
+
+/* ============================
+   HISTORIAL DE VERSIONES
+   ============================ */
+.version-list {
+    max-height: 180px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
+    padding: 10px;
+    border: 1px solid var(--panel-border);
+}
+
+.version-item {
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.version-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Estado seleccionado */
+.version-item.selected {
+    background: var(--accent);
+    color: #111;
+}
+
+/* ============================
+   NOTIFICACIONES / ALERTAS
+   ============================ */
+.alert {
+    padding: 10px;
+    border-radius: var(--radius);
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.alert-error {
+    background: rgba(255, 111, 111, 0.25);
+    border-left: 4px solid var(--error);
+}
+
+.alert-success {
+    background: rgba(126, 255, 196, 0.25);
+    border-left: 4px solid var(--success);
+}
+
+/* ============================
+   SCROLLBARS CUSTOM
+   ============================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
