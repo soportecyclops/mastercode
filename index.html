@@ -892,4 +892,66 @@ btnAI.addEventListener('click', async ()=>{
     if(startLine && endLine){ state.chosen = {startLine, endLine, score:0.99, excerpt: original.split(/\r?\n/).slice(startLine-1, endLine).join('\n')}; highlightLines(startLine,endLine); }
   }catch(err){
     console.error(err);
-    match
+    matchInfo.textContent = 'Error al llamar la IA: ' + err.message;
+  }
+});
+
+/* ============================
+   Small helpers
+   ============================ */
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ============================
+   Load sample / help
+   ============================ */
+document.getElementById('btnHelp').addEventListener('click', ()=>{
+  alert(`Uso rápido:
+1) Pegar o subir archivo en Ventana 1.
+2) Pegar fragmento en Ventana 2.
+3) Presionar "Analizar (Local)" para obtener la coincidencia más probable.
+4) Revisar la sugerencia en Ventana 3; el área resaltada en Ventana 1 muestra la ubicación sugerida.
+5) Utilizar Reemplazar / Insertar según convenga.
+6) Guardar versión con "Guardar versión". Máx ${state.maxHistory} versiones locales.`);
+});
+
+/* ============================
+   Init autosave for history (cada X segundos) y carga
+   ============================ */
+setInterval(()=>{ persistHistory(); }, 5000);
+
+/* ============================
+   On load: sample content
+   ============================ */
+originalEl.value = `// Archivo de ejemplo: app.js
+function init(){
+  console.log('init');
+}
+
+function updateUI(){
+  // TODO: implementar
+}
+
+function handleClick(e){
+  console.log('click', e);
+}
+`;
+
+/* ============================
+   Utility: basic load of history on start
+   ============================ */
+loadHistory();
+
+/* ============================
+   Helpers: reading/writing files fallback
+   ============================ */
+fileInput.addEventListener('change',()=>{}); // handled earlier
+
+/* ============================
+   Optional: keyboard shortcut Ctrl+Enter to analyze
+   ============================ */
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key==='Enter'){ runLocalAnalysis(); }
+});
+</script>
+</body>
+</html>
